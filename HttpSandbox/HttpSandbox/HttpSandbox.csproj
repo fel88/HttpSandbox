@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>globe.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="globe.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoDialog" Version="1.0.0.7" />

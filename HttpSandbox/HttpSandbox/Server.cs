@@ -10,6 +10,8 @@ namespace HttpSandbox
         public List<ConnectionInfo> streams = new List<ConnectionInfo>();
         public List<HttpRequestInfo> Requests = new List<HttpRequestInfo>();
         public Action<HttpRequestInfo> RequestAdded;
+        public List<MockHttpResponse> Mocks = new List<MockHttpResponse>();
+ 
         public void InitTcp(IPAddress ip, int port, Func<object> factory = null)
         {
             server1 = new TcpListener(ip, port);
@@ -43,9 +45,9 @@ namespace HttpSandbox
         }
 
         private TcpListener server1;
+
         public void ThreadProcessor(NetworkStream stream, object obj)
         {
-
             StreamReader reader = new StreamReader(stream);
             StreamWriter writer = new StreamWriter(stream);
 
@@ -56,14 +58,21 @@ namespace HttpSandbox
                     var line = reader.ReadLine();
                     if (line == null)
                         break;
+
                     if (line.Contains(" HTTP/"))//http start
                     {
-                        ParseHTTPRequest(line, reader);
+                        var request = ParseHTTPRequest(line, reader);
                         //response ok
-                        var okResp = "HTTP/1.1 200 OK\r\nContent-Type: application/json";
-
-                        writer.WriteLine(okResp);
-                        writer.Flush();
+                        if (request != null)
+                        {
+                            var fr = Mocks.FirstOrDefault(z => z.IsApplicable(request));
+                            if (fr != null)
+                            {
+                                var resp = fr.GetResponse();
+                                writer.WriteLine(resp);
+                                writer.Flush();
+                            }                          
+                        }
                     }
 
                 }
@@ -82,12 +91,12 @@ namespace HttpSandbox
             }
         }
 
-        private void ParseHTTPRequest(string startLine, StreamReader reader)
+        private HttpRequestInfo ParseHTTPRequest(string startLine, StreamReader reader)
         {
             HttpRequestInfo request = new HttpRequestInfo();
             request.Raw += startLine + Environment.NewLine;
-        
-            request.Timestamp = DateTime.Now; 
+
+            request.Timestamp = DateTime.Now;
             Requests.Add(request);
             RequestAdded?.Invoke(request);
             int clen = 0;
@@ -109,8 +118,8 @@ namespace HttpSandbox
                         reader.Read(buf, 0, request.ContentLength);
                         request.Raw += Encoding.Default.GetString(buf.Select(z => (byte)z).ToArray());
 
-                       
-                        return;
+
+                        return request;
                     }
 
                 }
@@ -127,6 +136,7 @@ namespace HttpSandbox
 
                 }
             }
+            return null;
         }
     }
 }

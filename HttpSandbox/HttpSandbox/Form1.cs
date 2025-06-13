@@ -1,5 +1,7 @@
+using AutoDialog.Extensions;
 using System.IO;
 using System.Net;
+using System.Security.Permissions;
 using System.Text;
 using System.Xml.Linq;
 
@@ -55,5 +57,102 @@ namespace HttpSandbox
 
             TopMost = d.GetBoolField("topmost");
         }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void staticHtmlPageResponseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new StaticHtmlPageResponse());
+            UpdateMocksList();
+        }
+
+        private void UpdateMocksList()
+        {
+            mocksListView.Items.Clear();
+            foreach (var item in server.Mocks)
+            {
+                mocksListView.Items.Add(new ListViewItem(new string[] { item.Name,
+                    item.GetType().Name,
+                    item.IsEnabled.ToString() })
+                { Tag = item });
+            }
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            mocksListView.SelectedItems[0].Tag.EditWithAutoDialog();
+            UpdateMocksList();
+        }
+
+        private void upToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var obj = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            var ind = server.Mocks.IndexOf(obj);
+            if (ind > 0)
+            {
+                server.Mocks.Remove(obj);
+                server.Mocks.Insert(ind--, obj);
+                UpdateMocksList();
+            }
+        }
+
+        private void status200ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new Status200Response());
+            UpdateMocksList();
+        }
+
+        private void filtersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var obj = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            FiltersEditor fed = new FiltersEditor();
+            fed.Init(obj);
+            fed.ShowDialog();
+        }
+
+        private void helloWorldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Clear();
+            server.Mocks.Add(new StaticHtmlPageResponse());
+            server.Mocks[0].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET" });
+            UpdateMocksList();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            commandsToolStripMenuItem.DropDownItems.Clear();
+            
+
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var obj = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            var cmds = obj.GetCommands();
+            foreach (var item in cmds)
+            {
+                ToolStripMenuItem tsp = new ToolStripMenuItem();
+                tsp.Text = item.Name;
+                tsp.Click += (sender, e) =>
+                {
+                    item.Perform(obj);
+                };
+                commandsToolStripMenuItem.DropDownItems.Add(tsp);
+
+            }
+        }
     }
+    
 }
