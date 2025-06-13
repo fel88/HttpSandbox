@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,8 +11,9 @@ namespace HttpSandbox
         public List<ConnectionInfo> streams = new List<ConnectionInfo>();
         public List<HttpRequestInfo> Requests = new List<HttpRequestInfo>();
         public Action<HttpRequestInfo> RequestAdded;
+        public Action<HttpRequestInfo> RequestUpdated;
         public List<MockHttpResponse> Mocks = new List<MockHttpResponse>();
- 
+
         public void InitTcp(IPAddress ip, int port, Func<object> factory = null)
         {
             server1 = new TcpListener(ip, port);
@@ -61,7 +63,7 @@ namespace HttpSandbox
 
                     if (line.Contains(" HTTP/"))//http start
                     {
-                        var request = ParseHTTPRequest(line, reader);
+                        var request = ParseHTTPRequest(line, stream, reader);
                         //response ok
                         if (request != null)
                         {
@@ -71,7 +73,7 @@ namespace HttpSandbox
                                 var resp = fr.GetResponse();
                                 writer.WriteLine(resp);
                                 writer.Flush();
-                            }                          
+                            }
                         }
                     }
 
@@ -91,7 +93,7 @@ namespace HttpSandbox
             }
         }
 
-        private HttpRequestInfo ParseHTTPRequest(string startLine, StreamReader reader)
+        private HttpRequestInfo ParseHTTPRequest(string startLine,NetworkStream stream, StreamReader reader)
         {
             HttpRequestInfo request = new HttpRequestInfo();
             request.Raw += startLine + Environment.NewLine;
@@ -114,11 +116,19 @@ namespace HttpSandbox
 
                     if (string.IsNullOrEmpty(line.Trim()) || line == "\r\n")
                     {
-                        char[] buf = new char[request.ContentLength];
-                        reader.Read(buf, 0, request.ContentLength);
-                        request.Raw += Encoding.Default.GetString(buf.Select(z => (byte)z).ToArray());
+                        if (request.ContentLength > 0)
+                        {
+                           
+                            char[] buf = new char[request.ContentLength];
+                          
+                            reader.Read(buf, 0, buf.Length);
+                          var bts=  System.Text.Encoding.UTF8.GetBytes(buf);
 
 
+                            request.Data = bts;
+                            request.Raw += new string(buf);
+                        }
+                        RequestUpdated?.Invoke(request);
                         return request;
                     }
 

@@ -32,7 +32,21 @@ namespace HttpSandbox
             {
                 listView1.Invoke(() =>
                 {
-                    listView1.Items.Add(new ListViewItem(new string[] { r.Timestamp.ToString(), r.Raw }) { Tag = r });
+                    listView1.Items.Add(new ListViewItem(new string[] { r.Timestamp.ToString(), r.Raw,r.Raw.Length.ToString() }) { Tag = r });
+                });
+
+            }; 
+            
+            server.RequestUpdated = (r) =>
+            {
+                listView1.Invoke(() =>
+                {
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        if (listView1.Items[i].Tag != r)
+                            continue;
+                        listView1.Items[i].SubItems[2].Text = r.Raw.Length.ToString();
+                    }                    
                 });
 
             };
@@ -128,6 +142,9 @@ namespace HttpSandbox
             server.Mocks.Clear();
             server.Mocks.Add(new StaticHtmlPageResponse());
             server.Mocks[0].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET" });
+
+            server.Mocks.Add(new Status200Response());
+            server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
             UpdateMocksList();
         }
 

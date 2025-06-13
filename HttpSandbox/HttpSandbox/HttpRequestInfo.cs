@@ -8,6 +8,7 @@ namespace HttpSandbox
         public string Url;
         public string Body;
         public string Raw;
+        public byte[] Data;
     }
 
 }
