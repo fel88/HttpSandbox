@@ -43,6 +43,11 @@
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
             columnHeader3 = new ColumnHeader();
+            columnHeader7 = new ColumnHeader();
+            contextMenuStrip2 = new ContextMenuStrip(components);
+            contentToolStripMenuItem = new ToolStripMenuItem();
+            saveToFileToolStripMenuItem = new ToolStripMenuItem();
+            parseMultipToolStripMenuItem = new ToolStripMenuItem();
             richTextBox1 = new RichTextBox();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
@@ -62,8 +67,10 @@
             upToolStripMenuItem = new ToolStripMenuItem();
             downToolStripMenuItem = new ToolStripMenuItem();
             commandsToolStripMenuItem = new ToolStripMenuItem();
+            updateToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            contextMenuStrip2.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -134,7 +141,7 @@
             // helloWorldToolStripMenuItem
             // 
             helloWorldToolStripMenuItem.Name = "helloWorldToolStripMenuItem";
-            helloWorldToolStripMenuItem.Size = new Size(180, 22);
+            helloWorldToolStripMenuItem.Size = new Size(133, 22);
             helloWorldToolStripMenuItem.Text = "hello world";
             helloWorldToolStripMenuItem.Click += helloWorldToolStripMenuItem_Click;
             // 
@@ -155,7 +162,8 @@
             // 
             // listView1
             // 
-            listView1.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3 });
+            listView1.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader7 });
+            listView1.ContextMenuStrip = contextMenuStrip2;
             listView1.Dock = DockStyle.Fill;
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
@@ -170,6 +178,33 @@
             // columnHeader1
             // 
             columnHeader1.Width = 120;
+            // 
+            // contextMenuStrip2
+            // 
+            contextMenuStrip2.Items.AddRange(new ToolStripItem[] { contentToolStripMenuItem, updateToolStripMenuItem });
+            contextMenuStrip2.Name = "contextMenuStrip2";
+            contextMenuStrip2.Size = new Size(181, 70);
+            // 
+            // contentToolStripMenuItem
+            // 
+            contentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToFileToolStripMenuItem, parseMultipToolStripMenuItem });
+            contentToolStripMenuItem.Name = "contentToolStripMenuItem";
+            contentToolStripMenuItem.Size = new Size(180, 22);
+            contentToolStripMenuItem.Text = "content";
+            // 
+            // saveToFileToolStripMenuItem
+            // 
+            saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
+            saveToFileToolStripMenuItem.Size = new Size(154, 22);
+            saveToFileToolStripMenuItem.Text = "save to file";
+            saveToFileToolStripMenuItem.Click += saveToFileToolStripMenuItem_Click;
+            // 
+            // parseMultipToolStripMenuItem
+            // 
+            parseMultipToolStripMenuItem.Name = "parseMultipToolStripMenuItem";
+            parseMultipToolStripMenuItem.Size = new Size(154, 22);
+            parseMultipToolStripMenuItem.Text = "parse multipart";
+            parseMultipToolStripMenuItem.Click += parseMultipToolStripMenuItem_Click;
             // 
             // richTextBox1
             // 
@@ -231,7 +266,7 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { addToolStripMenuItem, deleteToolStripMenuItem, editToolStripMenuItem, filtersToolStripMenuItem, moveToolStripMenuItem, commandsToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 158);
+            contextMenuStrip1.Size = new Size(135, 136);
             contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // addToolStripMenuItem
@@ -286,14 +321,14 @@
             // upToolStripMenuItem
             // 
             upToolStripMenuItem.Name = "upToolStripMenuItem";
-            upToolStripMenuItem.Size = new Size(180, 22);
+            upToolStripMenuItem.Size = new Size(104, 22);
             upToolStripMenuItem.Text = "up";
             upToolStripMenuItem.Click += upToolStripMenuItem_Click;
             // 
             // downToolStripMenuItem
             // 
             downToolStripMenuItem.Name = "downToolStripMenuItem";
-            downToolStripMenuItem.Size = new Size(180, 22);
+            downToolStripMenuItem.Size = new Size(104, 22);
             downToolStripMenuItem.Text = "down";
             // 
             // commandsToolStripMenuItem
@@ -301,6 +336,13 @@
             commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             commandsToolStripMenuItem.Size = new Size(134, 22);
             commandsToolStripMenuItem.Text = "commands";
+            // 
+            // updateToolStripMenuItem
+            // 
+            updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            updateToolStripMenuItem.Size = new Size(180, 22);
+            updateToolStripMenuItem.Text = "update";
+            updateToolStripMenuItem.Click += updateToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -316,6 +358,7 @@
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
+            contextMenuStrip2.ResumeLayout(false);
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
@@ -358,5 +401,11 @@
         private ToolStripDropDownButton toolStripDropDownButton2;
         private ToolStripMenuItem helloWorldToolStripMenuItem;
         private ToolStripMenuItem commandsToolStripMenuItem;
+        private ContextMenuStrip contextMenuStrip2;
+        private ToolStripMenuItem contentToolStripMenuItem;
+        private ToolStripMenuItem saveToFileToolStripMenuItem;
+        private ToolStripMenuItem parseMultipToolStripMenuItem;
+        private ColumnHeader columnHeader7;
+        private ToolStripMenuItem updateToolStripMenuItem;
     }
 }

@@ -1,5 +1,7 @@
 using AutoDialog.Extensions;
+using HttpMultipartParser;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net;
 using System.Security.Permissions;
 using System.Text;
@@ -32,11 +34,13 @@ namespace HttpSandbox
             {
                 listView1.Invoke(() =>
                 {
-                    listView1.Items.Add(new ListViewItem(new string[] { r.Timestamp.ToString(), r.Raw,r.Raw.Length.ToString() }) { Tag = r });
+                    listView1.Items.Add(new ListViewItem([r.Timestamp.ToString(),
+                        r.Raw, r.Raw.Length.ToString(),r.Data!=null? r.Data.Length.ToString():"-"])
+                    { Tag = r });
                 });
 
-            }; 
-            
+            };
+
             server.RequestUpdated = (r) =>
             {
                 listView1.Invoke(() =>
@@ -46,7 +50,8 @@ namespace HttpSandbox
                         if (listView1.Items[i].Tag != r)
                             continue;
                         listView1.Items[i].SubItems[2].Text = r.Raw.Length.ToString();
-                    }                    
+                        listView1.Items[i].SubItems[3].Text = r.Data != null ? r.Data.Length.ToString():"-";
+                    }
                 });
 
             };
@@ -66,10 +71,33 @@ namespace HttpSandbox
             var d = AutoDialog.DialogHelpers.StartDialog();
             d.AddBoolField("topmost", "Top most", TopMost);
 
+            d.AddIntegerNumericField("uploadBufferSize", "upload packet size ", Server.UploadBufferSize, min: 1024, max: 1024 * 1024 * 128);
+            d.AddIntegerNumericField("uploadBufferDelay", "upload packet delay", Server.UploadBufferDelay, min: 0, max: 10000);
+
+            d.Shown += (s, e) =>
+            {
+
+                var c1 = d.Controls[0] as TableLayoutPanel;
+                int max = 0;
+                for (int i = 0; i < c1.Controls.Count; i++)
+                {
+                    var cntr = c1.Controls[i];
+                    if (cntr is Label label)
+                    {
+                        max = Math.Max(max, label.Width);
+                        label.Width *= 2;
+                    }
+                }
+                d.Width += max;
+
+            };
             if (!d.ShowDialog())
                 return;
 
             TopMost = d.GetBoolField("topmost");
+            Server.UploadBufferSize = d.GetIntegerNumericField("uploadBufferSize");
+            Server.UploadBufferDelay = d.GetIntegerNumericField("uploadBufferDelay");
+
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -151,7 +179,7 @@ namespace HttpSandbox
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             commandsToolStripMenuItem.DropDownItems.Clear();
-            
+
 
             if (mocksListView.SelectedItems.Count == 0)
                 return;
@@ -170,6 +198,56 @@ namespace HttpSandbox
 
             }
         }
+
+        private void saveToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0)
+                return;
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() != DialogResult.OK)
+                return;
+
+            var req = (listView1.SelectedItems[0].Tag as HttpRequestInfo);
+            File.WriteAllBytes(sfd.FileName, req.Data);
+        }
+
+        private async void parseMultipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0)
+                return;
+
+
+            var req = (listView1.SelectedItems[0].Tag as HttpRequestInfo);
+
+            var ms = new MemoryStream(req.Data);
+
+            List<byte[]> blocks = new List<byte[]>();
+            List<byte> accum = new List<byte>();
+
+            var parser = MultipartFormDataParser.Parse(ms);
+
+            foreach (var file in parser.Files)
+            {
+                Stream data = file.Data;
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = file.FileName;
+                if (sfd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                MemoryStream ms2 = new MemoryStream();
+                data.CopyTo(ms2);
+
+                File.WriteAllBytes(sfd.FileName, ms2.ToArray());
+
+            }
+        }
+
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    
+
 }

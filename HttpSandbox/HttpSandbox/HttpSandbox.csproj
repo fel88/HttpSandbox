@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoDialog" Version="1.0.0.7" />
+    <PackageReference Include="HttpMultipartParser" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

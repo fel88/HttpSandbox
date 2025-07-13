@@ -50,8 +50,9 @@ namespace HttpSandbox
 
         public void ThreadProcessor(NetworkStream stream, object obj)
         {
-            StreamReader reader = new StreamReader(stream);
+            BinaryReader reader = new BinaryReader(stream);
             StreamWriter writer = new StreamWriter(stream);
+
 
             while (true)
             {
@@ -93,7 +94,9 @@ namespace HttpSandbox
             }
         }
 
-        private HttpRequestInfo ParseHTTPRequest(string startLine,NetworkStream stream, StreamReader reader)
+        public static int UploadBufferSize = 16 * 1024;
+        public static int UploadBufferDelay = 0;
+        private HttpRequestInfo ParseHTTPRequest(string startLine, NetworkStream stream, BinaryReader reader)
         {
             HttpRequestInfo request = new HttpRequestInfo();
             request.Raw += startLine + Environment.NewLine;
@@ -118,15 +121,28 @@ namespace HttpSandbox
                     {
                         if (request.ContentLength > 0)
                         {
-                           
-                            char[] buf = new char[request.ContentLength];
-                          
-                            reader.Read(buf, 0, buf.Length);
-                          var bts=  System.Text.Encoding.UTF8.GetBytes(buf);
+
+                            List<char> buf = new List<char>();
 
 
+                            int remains = request.ContentLength;
+                            List<byte> bts2 = new List<byte>();
+
+                            while (remains > 0)
+                            {
+                                if (UploadBufferDelay > 0)                                
+                                    Thread.Sleep(UploadBufferDelay);
+                                
+                                var chunk = reader.ReadBytes(Math.Min(UploadBufferSize, remains));
+                                bts2.AddRange(chunk);
+                                remains -= chunk.Length;
+                            }
+
+
+                            var bts = bts2.ToArray();
                             request.Data = bts;
-                            request.Raw += new string(buf);
+                            request.RawData = buf.Select(z => (byte)z).ToArray();
+                            request.Raw += new string(buf.ToArray());
                         }
                         RequestUpdated?.Invoke(request);
                         return request;

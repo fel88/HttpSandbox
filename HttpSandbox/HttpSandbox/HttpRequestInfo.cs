@@ -9,6 +9,7 @@ namespace HttpSandbox
         public string Body;
         public string Raw;
         public byte[] Data;
+        public byte[] RawData;
     }
 
 }
