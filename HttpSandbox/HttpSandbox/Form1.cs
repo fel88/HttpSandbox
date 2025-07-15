@@ -50,12 +50,22 @@ namespace HttpSandbox
                         if (listView1.Items[i].Tag != r)
                             continue;
                         listView1.Items[i].SubItems[2].Text = r.Raw.Length.ToString();
-                        listView1.Items[i].SubItems[3].Text = r.Data != null ? r.Data.Length.ToString():"-";
+                        listView1.Items[i].SubItems[3].Text = r.Data != null ? FormatFileSize(r.Data.Length) : "-";
                     }
                 });
 
             };
             server.InitTcp(IPAddress.Any, port);
+        }
+
+        public static string FormatFileSize(long bytes)
+        {
+            var unit = 1024;
+            if (bytes < unit)
+                return $"{bytes} B";
+
+            var exp = (int)(Math.Log(bytes) / Math.Log(unit));
+            return $"{bytes / Math.Pow(unit, exp):F2} {("KMGTPE")[exp - 1]}B";
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -91,6 +101,8 @@ namespace HttpSandbox
                 d.Width += max;
 
             };
+
+            d.TopMost = TopMost;
             if (!d.ShowDialog())
                 return;
 
@@ -245,6 +257,18 @@ namespace HttpSandbox
         }
 
         private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.TopMost = TopMost;
+            about.Show(this);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
