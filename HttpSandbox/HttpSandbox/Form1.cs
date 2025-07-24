@@ -272,6 +272,17 @@ namespace HttpSandbox
         {
 
         }
+
+        private void helloWorld2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Clear();
+            server.Mocks.Add(new FileHtmlPageResponse());
+            server.Mocks[0].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET" });
+
+            server.Mocks.Add(new Status200Response());
+            server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
+            UpdateMocksList();
+        }
     }
 
 }

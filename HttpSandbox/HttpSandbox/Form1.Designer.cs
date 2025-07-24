@@ -71,6 +71,7 @@
             commandsToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
+            helloWorld2ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             contextMenuStrip2.SuspendLayout();
@@ -135,7 +136,7 @@
             // toolStripDropDownButton2
             // 
             toolStripDropDownButton2.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] { helloWorldToolStripMenuItem });
+            toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] { helloWorldToolStripMenuItem, helloWorld2ToolStripMenuItem });
             toolStripDropDownButton2.Image = (Image)resources.GetObject("toolStripDropDownButton2.Image");
             toolStripDropDownButton2.ImageTransparentColor = Color.Magenta;
             toolStripDropDownButton2.Name = "toolStripDropDownButton2";
@@ -276,7 +277,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(972, 397);
+            tabPage2.Size = new Size(972, 375);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Handlers";
             tabPage2.UseVisualStyleBackColor = true;
@@ -290,7 +291,7 @@
             mocksListView.GridLines = true;
             mocksListView.Location = new Point(3, 3);
             mocksListView.Name = "mocksListView";
-            mocksListView.Size = new Size(966, 391);
+            mocksListView.Size = new Size(966, 369);
             mocksListView.TabIndex = 0;
             mocksListView.UseCompatibleStateImageBehavior = false;
             mocksListView.View = View.Details;
@@ -395,6 +396,13 @@
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(0, 17);
             // 
+            // helloWorld2ToolStripMenuItem
+            // 
+            helloWorld2ToolStripMenuItem.Name = "helloWorld2ToolStripMenuItem";
+            helloWorld2ToolStripMenuItem.Size = new Size(180, 22);
+            helloWorld2ToolStripMenuItem.Text = "hello world 2";
+            helloWorld2ToolStripMenuItem.Click += helloWorld2ToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -464,5 +472,6 @@
         private ToolStripButton toolStripButton3;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripMenuItem helloWorld2ToolStripMenuItem;
     }
 }
