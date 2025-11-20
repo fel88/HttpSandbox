@@ -1,7 +1,9 @@
 using AutoDialog.Extensions;
 using HttpMultipartParser;
 using HttpSandbox.Common;
+using HttpSandbox.Editors;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
@@ -134,7 +136,9 @@ namespace HttpSandbox
             {
                 mocksListView.Items.Add(new ListViewItem(new string[] { item.Name,
                     item.GetType().Name,
-                    item.IsEnabled.ToString() })
+                    item.IsEnabled.ToString() ,
+                    item.Priority.ToString()
+                })
                 { Tag = item });
             }
         }
@@ -209,7 +213,24 @@ namespace HttpSandbox
 
                             }
                         };
-                        return [c];
+                        var c2 = new Command()
+                        {
+                            Name = "edit HTML",
+                            Perform = (z) =>
+                            {
+
+                                HtmlEditor editor = new HtmlEditor();
+                                editor.Init((z as StaticHtmlPageResponse).Html);
+                                editor.Show();
+                                editor.FormClosing += (s, e) =>
+                                {
+                                    (z as StaticHtmlPageResponse).Html = editor.Editor.Text;
+                                };
+
+
+                            }
+                        };
+                        return [c, c2];
                     }
 
                 case FileHtmlPageResponse:
@@ -229,10 +250,47 @@ namespace HttpSandbox
                         };
                         return [c];
                     }
+                case ImgFileResponse:
+                    {
+                        Command c = new Command()
+                        {
+                            Name = "Set image",
+                            Perform = (z) =>
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                if (ofd.ShowDialog() != DialogResult.OK)
+                                    return;
+
+                                (z as ImgFileResponse).Path = ofd.FileName;
+
+                            }
+                        };
+                        return [c];
+                    }
+                case FileResponse:
+                    {
+                        Command c = new Command()
+                        {
+                            Name = "Set file path",
+                            Perform = (z) =>
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                if (ofd.ShowDialog() != DialogResult.OK)
+                                    return;
+
+                                (z as FileResponse).Path = ofd.FileName;
+
+                            }
+                        };
+                        return [c];
+                    }
             }
 
             return [];
         }
+
+
+
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             commandsToolStripMenuItem.DropDownItems.Clear();
@@ -351,7 +409,7 @@ namespace HttpSandbox
 
             var doc = XDocument.Load(ofd.FileName);
             server = new Server(doc.Root);
-           
+
 
             UpdateMocksList();
         }
@@ -371,6 +429,41 @@ namespace HttpSandbox
             string url = $"http://localhost:{server.Port}";
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 
+        }
+
+        private void fileDownloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Clear();
+            var s1 = new StaticHtmlPageResponse();
+
+            s1.Html = "<!doctype html>\r\n<!-- HTML content follows -->" +
+                                    "<html><header></header><body>" +
+                                    "Hello world!<p><a href=\"file1.png\" download>\r\n    Download File\r\n</a></p><p><a href=\"file1.png\" >\r\n    Show File\r\n</a></p></body></html>";
+            server.Mocks.Add(s1);
+            server.Mocks[0].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET" });
+
+            server.Mocks.Add(new Status200Response());
+            server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
+
+            Bitmap bmp = new Bitmap(200, 30);
+            var gr = Graphics.FromImage(bmp);
+            gr.Clear(Color.LightGreen);
+            var text = "Hello world!";
+            var font = new Font("Consolas", 18);
+            var mss = gr.MeasureString(text, font);
+            gr.DrawString(text, font, Brushes.White, bmp.Width / 2 - mss.Width / 2, bmp.Height / 2 - mss.Height / 2);
+            MemoryStream ms = new MemoryStream();
+            bmp.Save(ms, ImageFormat.Jpeg);
+            server.Mocks.Add(new EmbeddedImgFileResponse() { Data = ms.ToArray(), Priority = 10 });
+            server.Mocks[2].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET " });
+            server.Mocks[2].Filters.Add(new ContainsTextHttpFilter() { Filter = "file1.png" });
+            UpdateMocksList();
+        }
+
+        private void fileResponseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new FileResponse());
+            UpdateMocksList();
         }
     }
 

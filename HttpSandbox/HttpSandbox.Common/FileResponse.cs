@@ -1,46 +1,47 @@
-
 using System.Xml.Linq;
 
 namespace HttpSandbox
 {
-    public class FileHtmlPageResponse : MockHttpResponse
+    public class FileResponse : MockHttpResponse
     {
-        public FileHtmlPageResponse()
+        public FileResponse()
         {
 
         }
 
-        public FileHtmlPageResponse(XElement item) : base(item)
+        public FileResponse(XElement item) : base(item)
         {
             Path = item.Element("path").Value;
-
         }
 
         public string Path { get; set; }
 
         public override string GetResponse()
         {
-            var text = File.ReadAllText(Path);
+            var file = File.ReadAllBytes(Path);
             var resp = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html; charset=UTF-8" +
+                "Content-Type: application/octet-stream" +
                 "\r\nDate: Fri, 21 Jun 2025 14:18:33 GMT" +
-                "\r\nLast-Modified: Thu, 17 Oct 2024 07:18:26 GMT" +
-                $"\r\nContent-Length: {text.Length}\r\n\r\n{text}";
+                $"\r\nLast-Modified: Thu, 17 Oct {DateTime.Now.Year} 07:18:26 GMT" +
+                $"\r\nContent-Length: {file.Length}\r\n";
 
             return resp;
         }
 
         public override void WriteResponse(StreamWriter writer)
         {
+            var file = File.ReadAllBytes(Path);
+
             writer.WriteLine(GetResponse());
             writer.Flush();
+
+            writer.BaseStream.Write(file, 0, file.Length);
         }
 
         public override XElement ToXml()
         {
-
             XElement ret = new XElement("mock");
-            ret.Add(new XAttribute("kind", nameof(FileHtmlPageResponse)));
+            ret.Add(new XAttribute("kind", nameof(FileResponse)));
             ret.Add(new XElement("path", new XCData(Path)));
             ret.Add(FiltersToXml());
             return ret;

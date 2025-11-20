@@ -38,5 +38,11 @@ namespace HttpSandbox
             ret.Add(FiltersToXml());
             return ret;
         }
+
+        public override void WriteResponse(StreamWriter writer)
+        {
+            writer.WriteLine(GetResponse());
+            writer.Flush();
+        }
     }
 }

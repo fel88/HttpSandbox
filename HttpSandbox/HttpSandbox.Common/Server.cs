@@ -34,7 +34,7 @@ namespace HttpSandbox.Common
             XElement ret = new XElement("server");
             foreach (var item in Mocks)
             {
-                ret.Add(item.ToXml()); 
+                ret.Add(item.ToXml());
             }
             return ret;
         }
@@ -52,7 +52,7 @@ namespace HttpSandbox.Common
             {
                 while (true)
                 {
-                    var client = server1.AcceptTcpClient();                    
+                    var client = server1.AcceptTcpClient();
                     Console.WriteLine("client accepted");
                     lock (streams)
                     {
@@ -96,12 +96,13 @@ namespace HttpSandbox.Common
                         //response ok
                         if (request != null)
                         {
-                            var fr = Mocks.FirstOrDefault(z => z.IsApplicable(request));
-                            if (fr != null)
+                            var cands = Mocks.Where(z => z.IsApplicable(request)).ToArray();
+
+                            if (cands.Any())
                             {
-                                var resp = fr.GetResponse();
-                                writer.WriteLine(resp);
-                                writer.Flush();
+                                var fr = cands.OrderByDescending(z => z.Priority).First();
+                                 fr.WriteResponse(writer);
+                                
                             }
                         }
                     }
@@ -160,9 +161,9 @@ namespace HttpSandbox.Common
 
                             while (remains > 0)
                             {
-                                if (UploadBufferDelay > 0)                                
+                                if (UploadBufferDelay > 0)
                                     Thread.Sleep(UploadBufferDelay);
-                                
+
                                 var chunk = reader.ReadBytes(Math.Min(UploadBufferSize, remains));
                                 bts2.AddRange(chunk);
                                 remains -= chunk.Length;

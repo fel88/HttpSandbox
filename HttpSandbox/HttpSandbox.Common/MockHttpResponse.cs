@@ -6,6 +6,8 @@ namespace HttpSandbox
     {
         public string Name { get; set; }
         public bool IsEnabled { get; set; } = true;
+        public int Priority { get; set; }
+
         public List<HttpFilter> Filters = new List<HttpFilter>();
 
         public MockHttpResponse() { }
@@ -21,6 +23,7 @@ namespace HttpSandbox
             }
         }
         public abstract string GetResponse();
+        public abstract void WriteResponse(StreamWriter writer);
 
         public bool IsApplicable(HttpRequestInfo request)
         {
