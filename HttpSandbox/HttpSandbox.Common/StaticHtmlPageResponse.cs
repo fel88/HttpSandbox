@@ -29,26 +29,8 @@ namespace HttpSandbox
 
             return resp;
         }
-
-        public override IEnumerable<Command> GetCommands()
-        {
-            Command c = new Command()
-            {
-                Name = "load HTML from file",
-                Perform = (z) =>
-                {
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    if (ofd.ShowDialog() != DialogResult.OK)
-                        return;
-
-                    (z as StaticHtmlPageResponse).Html = File.ReadAllText(ofd.FileName);
-
-                }
-            };
-            return new[] { c };
-        }
-
-        internal override XElement ToXml()
+                
+        public override XElement ToXml()
         {
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(StaticHtmlPageResponse)));

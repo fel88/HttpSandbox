@@ -26,13 +26,8 @@ namespace HttpSandbox
         {
             return Filters.All(z => z.IsApplicable(request));
         }
-
-        public virtual IEnumerable<Command> GetCommands()
-        {
-            return [];
-        }
-
-        internal abstract XElement ToXml();
+               
+        public abstract XElement ToXml();
         protected XElement FiltersToXml()
         {
             return new XElement("filters", Filters.Select(z => z.ToXml()));

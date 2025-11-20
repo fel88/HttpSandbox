@@ -1,11 +1,13 @@
 using AutoDialog.Extensions;
 using HttpMultipartParser;
+using HttpSandbox.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
 using System.Security.Permissions;
 using System.Text;
+using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace HttpSandbox
@@ -188,7 +190,49 @@ namespace HttpSandbox
             server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
             UpdateMocksList();
         }
+        public Command[] GetCommands(MockHttpResponse mock)
+        {
+            switch (mock)
+            {
+                case StaticHtmlPageResponse:
+                    {
+                        var c = new Command()
+                        {
+                            Name = "load HTML from file",
+                            Perform = (z) =>
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                if (ofd.ShowDialog() != DialogResult.OK)
+                                    return;
 
+                                (z as StaticHtmlPageResponse).Html = File.ReadAllText(ofd.FileName);
+
+                            }
+                        };
+                        return [c];
+                    }
+
+                case FileHtmlPageResponse:
+                    {
+                        Command c = new Command()
+                        {
+                            Name = "Set HTML file",
+                            Perform = (z) =>
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                if (ofd.ShowDialog() != DialogResult.OK)
+                                    return;
+
+                                (z as FileHtmlPageResponse).Path = ofd.FileName;
+
+                            }
+                        };
+                        return [c];
+                    }
+            }
+
+            return [];
+        }
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             commandsToolStripMenuItem.DropDownItems.Clear();
@@ -198,7 +242,7 @@ namespace HttpSandbox
                 return;
 
             var obj = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
-            var cmds = obj.GetCommands();
+            var cmds = GetCommands(obj);
             foreach (var item in cmds)
             {
                 ToolStripMenuItem tsp = new ToolStripMenuItem();
@@ -306,19 +350,8 @@ namespace HttpSandbox
                 return;
 
             var doc = XDocument.Load(ofd.FileName);
-            server = new Server();
-            foreach (var item in doc.Root.Elements("mock"))
-            {
-                var kind = item.Attribute("kind").Value;
-                if (kind == nameof(StaticHtmlPageResponse))
-                {
-                    server.Mocks.Add(new StaticHtmlPageResponse(item));
-                }
-                if (kind == nameof(Status200Response))
-                {
-                    server.Mocks.Add(new Status200Response(item));
-                }
-            }
+            server = new Server(doc.Root);
+           
 
             UpdateMocksList();
         }

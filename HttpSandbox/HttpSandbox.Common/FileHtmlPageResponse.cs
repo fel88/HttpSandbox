@@ -5,6 +5,17 @@ namespace HttpSandbox
 {
     public class FileHtmlPageResponse : MockHttpResponse
     {
+        public FileHtmlPageResponse()
+        {
+
+        }
+
+        public FileHtmlPageResponse(XElement item) : base(item)
+        {
+            Path = item.Element("path").Value;
+
+        }
+
         public string Path { get; set; }
 
         public override string GetResponse()
@@ -18,28 +29,15 @@ namespace HttpSandbox
 
             return resp;
         }
-
-        public override IEnumerable<Command> GetCommands()
+                
+        public override XElement ToXml()
         {
-            Command c = new Command()
-            {
-                Name = "Set HTML file",
-                Perform = (z) =>
-                {
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    if (ofd.ShowDialog() != DialogResult.OK)
-                        return;
 
-                    (z as FileHtmlPageResponse).Path = ofd.FileName;
-
-                }
-            };
-            return [c];
-        }
-
-        internal override XElement ToXml()
-        {
-            throw new NotImplementedException();
+            XElement ret = new XElement("mock");
+            ret.Add(new XAttribute("kind", nameof(FileHtmlPageResponse)));
+            ret.Add(new XElement("path", new XCData(Path)));
+            ret.Add(FiltersToXml());
+            return ret;
         }
     }
 }

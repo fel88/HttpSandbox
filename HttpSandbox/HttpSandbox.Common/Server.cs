@@ -1,14 +1,28 @@
-using System.IO;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Sockets;
-using System.Text;
 using System.Xml.Linq;
 
-namespace HttpSandbox
+namespace HttpSandbox.Common
 {
     public class Server
     {
+        public Server() { }
+        public Server(XElement root)
+        {
+            foreach (var item in root.Elements("mock"))
+            {
+                var kind = item.Attribute("kind").Value;
+                if (kind == nameof(StaticHtmlPageResponse))
+                {
+                    Mocks.Add(new StaticHtmlPageResponse(item));
+                }
+                if (kind == nameof(Status200Response))
+                {
+                    Mocks.Add(new Status200Response(item));
+                }
+            }
+        }
+
         public Thread th;
         public List<ConnectionInfo> streams = new List<ConnectionInfo>();
         public List<HttpRequestInfo> Requests = new List<HttpRequestInfo>();
@@ -38,7 +52,7 @@ namespace HttpSandbox
             {
                 while (true)
                 {
-                    var client = server1.AcceptTcpClient();
+                    var client = server1.AcceptTcpClient();                    
                     Console.WriteLine("client accepted");
                     lock (streams)
                     {
@@ -95,6 +109,7 @@ namespace HttpSandbox
                 }
                 catch (IOException iex)
                 {
+                    Console.WriteLine(iex.Message);
 
                     break;
                 }
@@ -110,6 +125,7 @@ namespace HttpSandbox
 
         public static int UploadBufferSize = 16 * 1024;
         public static int UploadBufferDelay = 0;
+
         private HttpRequestInfo ParseHTTPRequest(string startLine, NetworkStream stream, BinaryReader reader)
         {
             HttpRequestInfo request = new HttpRequestInfo();

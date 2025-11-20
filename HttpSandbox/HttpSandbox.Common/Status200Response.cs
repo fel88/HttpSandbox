@@ -13,7 +13,7 @@ namespace HttpSandbox
             //HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n           
         }
 
-        internal override XElement ToXml()
+        public override XElement ToXml()
         {
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(Status200Response)));
