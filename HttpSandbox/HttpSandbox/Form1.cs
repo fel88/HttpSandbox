@@ -1,5 +1,6 @@
 using AutoDialog.Extensions;
 using HttpMultipartParser;
+using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
@@ -270,7 +271,13 @@ namespace HttpSandbox
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Server XML (*.sxml)|*.sxml";
 
+            if (sfd.ShowDialog() != DialogResult.OK)
+                return;
+
+            File.WriteAllText(sfd.FileName, server.ToXml().ToString());
         }
 
         private void helloWorld2ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -282,6 +289,55 @@ namespace HttpSandbox
             server.Mocks.Add(new Status200Response());
             server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
             UpdateMocksList();
+        }
+
+        private void htmlFilePageResponseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new FileHtmlPageResponse());
+            UpdateMocksList();
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Server XML (*.sxml)|*.sxml";
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            var doc = XDocument.Load(ofd.FileName);
+            server = new Server();
+            foreach (var item in doc.Root.Elements("mock"))
+            {
+                var kind = item.Attribute("kind").Value;
+                if (kind == nameof(StaticHtmlPageResponse))
+                {
+                    server.Mocks.Add(new StaticHtmlPageResponse(item));
+                }
+                if (kind == nameof(Status200Response))
+                {
+                    server.Mocks.Add(new Status200Response(item));
+                }
+            }
+
+            UpdateMocksList();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var item = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            server.Mocks.Remove(item);
+            UpdateMocksList();
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            string url = $"http://localhost:{server.Port}";
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+
         }
     }
 

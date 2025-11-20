@@ -1,11 +1,13 @@
 using System.IO;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
+using System.Xml.Linq;
 
 namespace HttpSandbox
 {
-    public partial class Server
+    public class Server
     {
         public Thread th;
         public List<ConnectionInfo> streams = new List<ConnectionInfo>();
@@ -13,9 +15,21 @@ namespace HttpSandbox
         public Action<HttpRequestInfo> RequestAdded;
         public Action<HttpRequestInfo> RequestUpdated;
         public List<MockHttpResponse> Mocks = new List<MockHttpResponse>();
+        public XElement ToXml()
+        {
+            XElement ret = new XElement("server");
+            foreach (var item in Mocks)
+            {
+                ret.Add(item.ToXml()); 
+            }
+            return ret;
+        }
+
+        public int Port { get; private set; }
 
         public void InitTcp(IPAddress ip, int port, Func<object> factory = null)
         {
+            Port = port;
             server1 = new TcpListener(ip, port);
             server1.Start();
 

@@ -1,9 +1,13 @@
 
+
+using System.Xml.Linq;
+
 namespace HttpSandbox
 {
     public abstract class HttpFilter
     {
         internal abstract bool IsApplicable(HttpRequestInfo request);
-        
+
+        public abstract XElement ToXml();
     }
 }

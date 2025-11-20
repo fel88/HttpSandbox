@@ -1,4 +1,6 @@
 
+using System.Xml.Linq;
+
 namespace HttpSandbox
 {
     public class FileHtmlPageResponse : MockHttpResponse
@@ -33,6 +35,11 @@ namespace HttpSandbox
                 }
             };
             return [c];
+        }
+
+        internal override XElement ToXml()
+        {
+            throw new NotImplementedException();
         }
     }
 }

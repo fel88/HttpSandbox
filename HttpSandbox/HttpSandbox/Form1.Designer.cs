@@ -38,7 +38,9 @@
             toolStripButton2 = new ToolStripButton();
             toolStripDropDownButton2 = new ToolStripDropDownButton();
             helloWorldToolStripMenuItem = new ToolStripMenuItem();
+            helloWorld2ToolStripMenuItem = new ToolStripMenuItem();
             toolStripButton3 = new ToolStripButton();
+            toolStripButton4 = new ToolStripButton();
             tableLayoutPanel1 = new TableLayoutPanel();
             listView1 = new ListView();
             columnHeader1 = new ColumnHeader();
@@ -62,6 +64,7 @@
             addToolStripMenuItem = new ToolStripMenuItem();
             staticHtmlPageResponseToolStripMenuItem = new ToolStripMenuItem();
             status200ToolStripMenuItem = new ToolStripMenuItem();
+            htmlFilePageResponseToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             filtersToolStripMenuItem = new ToolStripMenuItem();
@@ -71,7 +74,6 @@
             commandsToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
-            helloWorld2ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             contextMenuStrip2.SuspendLayout();
@@ -84,7 +86,7 @@
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripDropDownButton1, toolStripButton1, toolStripButton2, toolStripDropDownButton2, toolStripButton3 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripDropDownButton1, toolStripButton1, toolStripButton2, toolStripDropDownButton2, toolStripButton3, toolStripButton4 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(980, 25);
@@ -114,6 +116,7 @@
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             loadToolStripMenuItem.Size = new Size(97, 22);
             loadToolStripMenuItem.Text = "load";
+            loadToolStripMenuItem.Click += loadToolStripMenuItem_Click;
             // 
             // toolStripButton1
             // 
@@ -146,9 +149,16 @@
             // helloWorldToolStripMenuItem
             // 
             helloWorldToolStripMenuItem.Name = "helloWorldToolStripMenuItem";
-            helloWorldToolStripMenuItem.Size = new Size(180, 22);
+            helloWorldToolStripMenuItem.Size = new Size(153, 22);
             helloWorldToolStripMenuItem.Text = "hello world";
             helloWorldToolStripMenuItem.Click += helloWorldToolStripMenuItem_Click;
+            // 
+            // helloWorld2ToolStripMenuItem
+            // 
+            helloWorld2ToolStripMenuItem.Name = "helloWorld2ToolStripMenuItem";
+            helloWorld2ToolStripMenuItem.Size = new Size(153, 22);
+            helloWorld2ToolStripMenuItem.Text = "file single page";
+            helloWorld2ToolStripMenuItem.Click += helloWorld2ToolStripMenuItem_Click;
             // 
             // toolStripButton3
             // 
@@ -160,6 +170,15 @@
             toolStripButton3.Size = new Size(23, 22);
             toolStripButton3.Text = "toolStripButton3";
             toolStripButton3.Click += toolStripButton3_Click;
+            // 
+            // toolStripButton4
+            // 
+            toolStripButton4.Image = Properties.Resources.globe_network;
+            toolStripButton4.ImageTransparentColor = Color.Magenta;
+            toolStripButton4.Name = "toolStripButton4";
+            toolStripButton4.Size = new Size(113, 22);
+            toolStripButton4.Text = "show in browser";
+            toolStripButton4.Click += toolStripButton4_Click;
             // 
             // tableLayoutPanel1
             // 
@@ -313,7 +332,7 @@
             // 
             // addToolStripMenuItem
             // 
-            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem });
+            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem, htmlFilePageResponseToolStripMenuItem });
             addToolStripMenuItem.Image = Properties.Resources.plus;
             addToolStripMenuItem.Name = "addToolStripMenuItem";
             addToolStripMenuItem.Size = new Size(134, 22);
@@ -334,12 +353,20 @@
             status200ToolStripMenuItem.Text = "status 200";
             status200ToolStripMenuItem.Click += status200ToolStripMenuItem_Click;
             // 
+            // htmlFilePageResponseToolStripMenuItem
+            // 
+            htmlFilePageResponseToolStripMenuItem.Name = "htmlFilePageResponseToolStripMenuItem";
+            htmlFilePageResponseToolStripMenuItem.Size = new Size(209, 22);
+            htmlFilePageResponseToolStripMenuItem.Text = "html file page response";
+            htmlFilePageResponseToolStripMenuItem.Click += htmlFilePageResponseToolStripMenuItem_Click;
+            // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Image = Properties.Resources.cross;
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             deleteToolStripMenuItem.Size = new Size(134, 22);
             deleteToolStripMenuItem.Text = "delete";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
@@ -395,13 +422,6 @@
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(0, 17);
-            // 
-            // helloWorld2ToolStripMenuItem
-            // 
-            helloWorld2ToolStripMenuItem.Name = "helloWorld2ToolStripMenuItem";
-            helloWorld2ToolStripMenuItem.Size = new Size(180, 22);
-            helloWorld2ToolStripMenuItem.Text = "hello world 2";
-            helloWorld2ToolStripMenuItem.Click += helloWorld2ToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -473,5 +493,7 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripMenuItem helloWorld2ToolStripMenuItem;
+        private ToolStripMenuItem htmlFilePageResponseToolStripMenuItem;
+        private ToolStripButton toolStripButton4;
     }
 }

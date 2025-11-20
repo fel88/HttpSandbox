@@ -1,8 +1,20 @@
+using System.Xml.Linq;
 
 namespace HttpSandbox
 {
     public class StaticHtmlPageResponse : MockHttpResponse
     {
+        public StaticHtmlPageResponse()
+        {
+
+        }
+
+        public StaticHtmlPageResponse(XElement item):base(item)
+        {
+            Html = item.Element("content").Value;
+           
+        }
+
         public string Html { get; set; } = "<!doctype html>\r\n<!-- HTML content follows -->" +
                                     "<html><header></header><body>" +
                                     "Hello world!</body></html>";
@@ -34,6 +46,15 @@ namespace HttpSandbox
                 }
             };
             return new[] { c };
+        }
+
+        internal override XElement ToXml()
+        {
+            XElement ret = new XElement("mock");
+            ret.Add(new XAttribute("kind", nameof(StaticHtmlPageResponse)));
+            ret.Add(new XElement("content", new XCData(Html)));
+            ret.Add(FiltersToXml());
+            return ret;
         }
     }
 }
