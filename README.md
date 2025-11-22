@@ -1,6 +1,20 @@
 # HttpSandbox
-Web/ Mock http server with GUI
-![image](https://github.com/user-attachments/assets/306800e7-3387-460c-8e0f-d6b389f43ab4)
+Web/ Mock http server with GUI. 
+
+## Features:
+- lightweight C# scripts (runtime compilable) to generate JSON data from databases (**PostgeSQL**) using **Dapper**
+- quick web sites prototyping
+  
+<img width="1471" height="727" alt="image" src="https://github.com/user-attachments/assets/2f405105-3e3f-4e1f-ae31-d7ed6bee2f76" />
+
+<img width="1098" height="558" alt="image" src="https://github.com/user-attachments/assets/bb94334a-b8cb-40e9-8320-88cc9ffa461c" />
+
+
+
+
+## Samples:
+Tabulator + Dapper + PostgeSQL [tabulator sample](Samples/tabulator_sample.sxml)
+
 
 ## How to run static page 
 1. Presets -> Hello world
