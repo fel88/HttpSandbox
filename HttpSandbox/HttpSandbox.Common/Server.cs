@@ -29,6 +29,9 @@ namespace HttpSandbox.Common
                     case nameof(EmbeddedJsonFileResponse):
                         Mocks.Add(new EmbeddedJsonFileResponse(item));
                         break;
+                    case nameof(DynamicJsonResponse):
+                        Mocks.Add(new DynamicJsonResponse(item));
+                        break;
                 }
             }
         }

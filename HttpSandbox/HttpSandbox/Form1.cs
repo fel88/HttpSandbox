@@ -280,7 +280,34 @@ namespace HttpSandbox
                         };
                         return [c2, c];
                     }
+                case DynamicJsonResponse djr:
+                    {
+                        
+                        var c2 = new Command()
+                        {
+                            Name = "edit",
+                            Perform = (z) =>
+                            {
 
+                                SharpCodeEditor editor = new SharpCodeEditor();
+                                editor.MdiParent = mdi.Instance;
+
+                                editor.Init(djr.Program);
+                                editor.Show();
+                                editor.Save += () =>
+                                {
+                                    djr.Program = editor.Editor.Text;
+                                };
+                                editor.FormClosing += (s, e) =>
+                                {
+                                    djr.Program = editor.Editor.Text;
+                                };
+
+
+                            }
+                        };
+                        return [c2];
+                    }
                 case FileHtmlPageResponse:
                     {
                         Command c = new Command()
@@ -531,6 +558,12 @@ namespace HttpSandbox
             {
                 cmnds[0].Perform(item);
             }
+        }
+
+        private void dynamicJsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new DynamicJsonResponse());
+            UpdateMocksList();
         }
     }
 
