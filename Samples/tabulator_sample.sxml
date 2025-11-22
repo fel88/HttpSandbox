@@ -1,0 +1,137 @@
+<server>
+  <mock kind="StaticHtmlPageResponse" priority="0" enabled="true" name="">
+    <content><![CDATA[<!doctype html>
+<!-- HTML content follows --><html><head>
+<link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
+   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css" />
+  <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
+
+<script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
+<style>.tabulator {
+    border: none !important;
+}
+/* Remove borders from header columns */
+.tabulator .tabulator-header .tabulator-col {
+    border: none !important;
+}.tabulator .tabulator-header .tabulator-col {
+    border-right: none !important;
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.tabulator .tabulator-header {
+    border: none !important;
+}
+.tabulator-row .tabulator-cell:last-child {
+    border-right: 0px !important;
+}
+
+.tabulator .tabulator-header .tabulator-col:last-child {
+    border-right: 0px !important;
+}
+/* Remove borders from rows and cells */
+.tabulator-row, .tabulator-cell {
+    border: none !important;
+}
+.tabulator-row .tabulator-cell[tabulator-field="locked"]{
+  border-right: 0px;
+}
+.tabulator .tabulator-header .tabulator-col[tabulator-field="locked"]{
+  border-right: 0px;
+}
+.tabulator {
+    background-color: #f5f5f5;
+    font-family: sans-serif;
+}
+</style>
+<script>
+
+$(document).ready(function() {
+
+
+//Generate print icon
+var printIcon = function(cell, formatterParams){ //plain text value
+    return "<i class='fa fa-print'></i>";
+};
+//define some sample data
+ //create Tabulator on DOM element with id "example-table"
+var table = new Tabulator("#example-table", {
+  ajaxURL: "table2.json", // Ajax URL
+  dataTree:true, // Enable the Data Tree module
+ 	//height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+ 	//data:tabledata, //assign data to table
+ 	layout:"fitColumns", //fit columns to width of table (optional)
+ 	  rowFormatter: function(row) {
+        var data = row.getData(); // Get data for the row
+        if (data.age < 10) {
+            row.getElement().style.color = "red"; // Change text color
+        } else {
+            row.getElement().style.color = "black"; // Or set to default/another color
+        }
+    },
+ 	columns:[ //Define Table Columns
+ 	 {formatter:"rownum", hozAlign:"center", width:40},
+ 	 {formatter:printIcon, width:40, hozAlign:"center", cellClick:function(e, cell){alert("Printing row data for: " + cell.getRow().getData().name)}},
+	 	{title:"Name", field:"name", width:150},
+	 		{title:"Date Of Birth", field:"dob", sorter:"date", formatter:"datetime",formatterParams:{
+    inputFormat:"dd/MM/yyyy",
+    outputFormat:"dd-MM-yy",
+    invalidPlaceholder:"(invalid date)",
+    timezone:"America/Los_Angeles",
+}, hozAlign:"center"},
+	 	{title:"Age", field:"age", hozAlign:"left", formatter:"progress"},
+	 	{title:"Favourite Color", formatter:"color",field:"col"},
+	 
+ 	],
+});
+
+//trigger an alert message when the row is clicked
+table.on("rowClick", function(e, row){ 
+	//alert("Row " + row.getData().id + " Clicked!!!!");
+});
+
+    $('#example').DataTable({
+    paging: false,
+        "ajax": "data.json", // URL to your JSON data file or API endpoint
+        "columns": [
+            { "data": "name" },
+            { "data": "gender" },
+            { "data": "designation" }
+        ]
+    });
+});
+
+</script>
+</head>
+
+
+<body>Hello world!
+
+<div id="example-table"></div>
+
+</body></html>]]></content>
+    <filters>
+      <httpFilter kind="ContainsTextHttpFilter">
+        <filter><![CDATA[GET]]></filter>
+      </httpFilter>
+    </filters>
+  </mock>
+  <mock kind="EmbeddedJsonFileResponse" priority="33" enabled="true" name="">
+    <data><![CDATA[[ 	{"id":"1", "name":"Oli Bob", "age":"12", "col":"red", "dob":"04/05/1982","_children":[ 
+       {"id":2, "name":"Mary May", "age":"1", "col":"blue", "dob":"14/05/1982"}
+        
+    ]},
+    
+ 	{"id":2, "name":"Mary May", "age":"1", "col":"blue", "dob":"14/05/1982"}
+ 	
+ ]]]></data>
+    <filters>
+      <httpFilter kind="ContainsTextHttpFilter">
+        <filter><![CDATA[table2.json]]></filter>
+      </httpFilter>
+    </filters>
+  </mock>
+</server>
