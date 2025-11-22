@@ -12,13 +12,23 @@ namespace HttpSandbox.Common
             foreach (var item in root.Elements("mock"))
             {
                 var kind = item.Attribute("kind").Value;
-                if (kind == nameof(StaticHtmlPageResponse))
+                switch (kind)
                 {
-                    Mocks.Add(new StaticHtmlPageResponse(item));
-                }
-                if (kind == nameof(Status200Response))
-                {
-                    Mocks.Add(new Status200Response(item));
+                    case nameof(StaticHtmlPageResponse):
+                        Mocks.Add(new StaticHtmlPageResponse(item));
+                        break;
+                    case nameof(Status200Response):
+                        Mocks.Add(new Status200Response(item));
+                        break;
+                    case nameof(FileResponse):
+                        Mocks.Add(new FileResponse(item));
+                        break;
+                    case nameof(EmbeddedImgFileResponse):
+                        Mocks.Add(new EmbeddedImgFileResponse(item));
+                        break;
+                    case nameof(EmbeddedJsonFileResponse):
+                        Mocks.Add(new EmbeddedJsonFileResponse(item));
+                        break;
                 }
             }
         }

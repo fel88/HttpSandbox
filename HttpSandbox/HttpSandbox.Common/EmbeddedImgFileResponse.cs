@@ -38,11 +38,10 @@ namespace HttpSandbox
 
         public override XElement ToXml()
         {
-
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(EmbeddedImgFileResponse)));
-            ret.Add(new XElement("data", Convert.ToBase64String(Data)));
-            ret.Add(FiltersToXml());
+            ret.Add(new XElement("data", Convert.ToBase64String(Data)));            
+            UpdateXmlNode(ret);
             return ret;
         }
     }

@@ -61,6 +61,8 @@ namespace HttpSandbox
 
             };
             server.InitTcp(IPAddress.Any, port);
+            toolStripButton1.Enabled = false;
+            Text = $"Server port: {port}";
         }
 
         public static string FormatFileSize(long bytes)
@@ -194,11 +196,12 @@ namespace HttpSandbox
             server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "POST" });
             UpdateMocksList();
         }
+
         public Command[] GetCommands(MockHttpResponse mock)
         {
             switch (mock)
             {
-                case StaticHtmlPageResponse:
+                case StaticHtmlPageResponse shpr:
                     {
                         var c = new Command()
                         {
@@ -209,7 +212,7 @@ namespace HttpSandbox
                                 if (ofd.ShowDialog() != DialogResult.OK)
                                     return;
 
-                                (z as StaticHtmlPageResponse).Html = File.ReadAllText(ofd.FileName);
+                                shpr.Html = File.ReadAllText(ofd.FileName);
 
                             }
                         };
@@ -219,18 +222,63 @@ namespace HttpSandbox
                             Perform = (z) =>
                             {
 
-                                HtmlEditor editor = new HtmlEditor();
-                                editor.Init((z as StaticHtmlPageResponse).Html);
+                                TextEditor editor = new TextEditor();
+                                editor.MdiParent = mdi.Instance;
+                                editor.Init(shpr.Html);
                                 editor.Show();
+                                editor.Save += () =>
+                                {
+                                    shpr.Html = editor.Editor.Text;
+                                };
+
                                 editor.FormClosing += (s, e) =>
                                 {
-                                    (z as StaticHtmlPageResponse).Html = editor.Editor.Text;
+                                    shpr.Html = editor.Editor.Text;
+                                };
+                            }
+                        };
+                        return [c2, c];
+                    }
+                case EmbeddedJsonFileResponse ejfr:
+                    {
+                        var c = new Command()
+                        {
+                            Name = "load from file",
+                            Perform = (z) =>
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                if (ofd.ShowDialog() != DialogResult.OK)
+                                    return;
+
+                                ejfr.Json = File.ReadAllText(ofd.FileName);
+
+                            }
+                        };
+                        var c2 = new Command()
+                        {
+                            Name = "edit",
+                            Perform = (z) =>
+                            {
+
+                                TextEditor editor = new TextEditor();
+                                editor.MdiParent = mdi.Instance;
+
+                                editor.Editor.SetHighlighting("Json");
+                                editor.Init(ejfr.Json);
+                                editor.Show();
+                                editor.Save += () =>
+                                {
+                                    ejfr.Json = editor.Editor.Text;
+                                };
+                                editor.FormClosing += (s, e) =>
+                                {
+                                    ejfr.Json = editor.Editor.Text;
                                 };
 
 
                             }
                         };
-                        return [c, c2];
+                        return [c2, c];
                     }
 
                 case FileHtmlPageResponse:
@@ -464,6 +512,25 @@ namespace HttpSandbox
         {
             server.Mocks.Add(new FileResponse());
             UpdateMocksList();
+        }
+
+        private void staticJsonFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new EmbeddedJsonFileResponse());
+            UpdateMocksList();
+        }
+
+        private void mocksListView_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var item = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            var cmnds = GetCommands(item);
+            if (cmnds != null && cmnds.Any())
+            {
+                cmnds[0].Perform(item);
+            }
         }
     }
 

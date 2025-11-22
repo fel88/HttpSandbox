@@ -35,14 +35,10 @@ namespace HttpSandbox
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(StaticHtmlPageResponse)));
             ret.Add(new XElement("content", new XCData(Html)));
-            ret.Add(FiltersToXml());
+            UpdateXmlNode(ret);
             return ret;
         }
 
-        public override void WriteResponse(StreamWriter writer)
-        {
-            writer.WriteLine(GetResponse());
-            writer.Flush();
-        }
+        
     }
 }

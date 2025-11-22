@@ -43,7 +43,8 @@ namespace HttpSandbox
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(FileResponse)));
             ret.Add(new XElement("path", new XCData(Path)));
-            ret.Add(FiltersToXml());
+            UpdateXmlNode(ret);
+
             return ret;
         }
     }

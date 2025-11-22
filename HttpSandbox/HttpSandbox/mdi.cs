@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace HttpSandbox
 {
@@ -15,6 +16,19 @@ namespace HttpSandbox
         public mdi()
         {
             InitializeComponent();
+            Instance = this;
+            Form1 f = new Form1();
+            f.MdiParent = this;
+            f.Show();
+        }
+
+        public static mdi Instance;
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            Form1 f = new Form1();
+            f.MdiParent = this;
+            f.Show();
+
         }
     }
 }

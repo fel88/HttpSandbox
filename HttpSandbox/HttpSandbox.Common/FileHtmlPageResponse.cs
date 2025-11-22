@@ -30,19 +30,14 @@ namespace HttpSandbox
             return resp;
         }
 
-        public override void WriteResponse(StreamWriter writer)
-        {
-            writer.WriteLine(GetResponse());
-            writer.Flush();
-        }
-
+  
         public override XElement ToXml()
         {
-
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(FileHtmlPageResponse)));
             ret.Add(new XElement("path", new XCData(Path)));
-            ret.Add(FiltersToXml());
+            UpdateXmlNode(ret);
+
             return ret;
         }
     }

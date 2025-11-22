@@ -41,11 +41,10 @@ namespace HttpSandbox
 
         public override XElement ToXml()
         {
-
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(ImgFileResponse)));
             ret.Add(new XElement("path", new XCData(Path)));
-            ret.Add(FiltersToXml());
+            UpdateXmlNode(ret);
             return ret;
         }
     }

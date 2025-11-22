@@ -13,17 +13,13 @@ namespace HttpSandbox
             //HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n           
         }
 
-        public override void WriteResponse(StreamWriter writer)
-        {
-            writer.WriteLine(GetResponse());
-            writer.Flush();
-        }
+    
 
         public override XElement ToXml()
         {
             XElement ret = new XElement("mock");
             ret.Add(new XAttribute("kind", nameof(Status200Response)));
-            ret.Add(FiltersToXml());
+            UpdateXmlNode(ret);
 
             return ret;
         }

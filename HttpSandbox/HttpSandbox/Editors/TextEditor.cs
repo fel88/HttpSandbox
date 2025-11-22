@@ -11,15 +11,15 @@ using System.Windows.Forms.Integration;
 
 namespace HttpSandbox.Editors
 {
-    public partial class HtmlEditor : Form
+    public partial class TextEditor : Form
     {
-        public HtmlEditor()
+        public TextEditor()
         {
             InitializeComponent();
             ElementHost elementHost = new ElementHost();
             elementHost.Dock = DockStyle.Fill;
             elementHost.Child = Editor = new CodeEditor.CodeEditor();
-            Controls.Add(elementHost);
+            panel1.Controls.Add(elementHost);
         }
 
         public void Init(string text)
@@ -27,5 +27,11 @@ namespace HttpSandbox.Editors
             Editor.Text = text;
         }
         public CodeEditor.CodeEditor Editor;
+
+        public event Action Save;
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            Save?.Invoke();
+        }
     }
 }

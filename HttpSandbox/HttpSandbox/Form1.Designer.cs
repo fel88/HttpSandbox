@@ -67,6 +67,8 @@
             staticHtmlPageResponseToolStripMenuItem = new ToolStripMenuItem();
             status200ToolStripMenuItem = new ToolStripMenuItem();
             htmlFilePageResponseToolStripMenuItem = new ToolStripMenuItem();
+            fileResponseToolStripMenuItem = new ToolStripMenuItem();
+            staticJsonFileToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             filtersToolStripMenuItem = new ToolStripMenuItem();
@@ -76,7 +78,6 @@
             commandsToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
-            fileResponseToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             contextMenuStrip2.SuspendLayout();
@@ -324,6 +325,7 @@
             mocksListView.TabIndex = 0;
             mocksListView.UseCompatibleStateImageBehavior = false;
             mocksListView.View = View.Details;
+            mocksListView.MouseDoubleClick += mocksListView_MouseDoubleClick;
             // 
             // columnHeader4
             // 
@@ -342,15 +344,15 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { addToolStripMenuItem, deleteToolStripMenuItem, editToolStripMenuItem, filtersToolStripMenuItem, moveToolStripMenuItem, commandsToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 158);
+            contextMenuStrip1.Size = new Size(135, 136);
             contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // addToolStripMenuItem
             // 
-            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem, htmlFilePageResponseToolStripMenuItem, fileResponseToolStripMenuItem });
+            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem, htmlFilePageResponseToolStripMenuItem, fileResponseToolStripMenuItem, staticJsonFileToolStripMenuItem });
             addToolStripMenuItem.Image = Properties.Resources.plus;
             addToolStripMenuItem.Name = "addToolStripMenuItem";
-            addToolStripMenuItem.Size = new Size(180, 22);
+            addToolStripMenuItem.Size = new Size(134, 22);
             addToolStripMenuItem.Text = "add";
             addToolStripMenuItem.Click += addToolStripMenuItem_Click;
             // 
@@ -375,11 +377,25 @@
             htmlFilePageResponseToolStripMenuItem.Text = "html file page response";
             htmlFilePageResponseToolStripMenuItem.Click += htmlFilePageResponseToolStripMenuItem_Click;
             // 
+            // fileResponseToolStripMenuItem
+            // 
+            fileResponseToolStripMenuItem.Name = "fileResponseToolStripMenuItem";
+            fileResponseToolStripMenuItem.Size = new Size(209, 22);
+            fileResponseToolStripMenuItem.Text = "file response";
+            fileResponseToolStripMenuItem.Click += fileResponseToolStripMenuItem_Click;
+            // 
+            // staticJsonFileToolStripMenuItem
+            // 
+            staticJsonFileToolStripMenuItem.Name = "staticJsonFileToolStripMenuItem";
+            staticJsonFileToolStripMenuItem.Size = new Size(209, 22);
+            staticJsonFileToolStripMenuItem.Text = "static json file";
+            staticJsonFileToolStripMenuItem.Click += staticJsonFileToolStripMenuItem_Click;
+            // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Image = Properties.Resources.cross;
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Size = new Size(134, 22);
             deleteToolStripMenuItem.Text = "delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
@@ -387,14 +403,14 @@
             // 
             editToolStripMenuItem.Image = Properties.Resources.pencil;
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(180, 22);
+            editToolStripMenuItem.Size = new Size(134, 22);
             editToolStripMenuItem.Text = "edit";
             editToolStripMenuItem.Click += editToolStripMenuItem_Click;
             // 
             // filtersToolStripMenuItem
             // 
             filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
-            filtersToolStripMenuItem.Size = new Size(180, 22);
+            filtersToolStripMenuItem.Size = new Size(134, 22);
             filtersToolStripMenuItem.Text = "filters";
             filtersToolStripMenuItem.Click += filtersToolStripMenuItem_Click;
             // 
@@ -402,7 +418,7 @@
             // 
             moveToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { upToolStripMenuItem, downToolStripMenuItem });
             moveToolStripMenuItem.Name = "moveToolStripMenuItem";
-            moveToolStripMenuItem.Size = new Size(180, 22);
+            moveToolStripMenuItem.Size = new Size(134, 22);
             moveToolStripMenuItem.Text = "move";
             // 
             // upToolStripMenuItem
@@ -421,7 +437,7 @@
             // commandsToolStripMenuItem
             // 
             commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
-            commandsToolStripMenuItem.Size = new Size(180, 22);
+            commandsToolStripMenuItem.Size = new Size(134, 22);
             commandsToolStripMenuItem.Text = "commands";
             // 
             // statusStrip1
@@ -437,13 +453,6 @@
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(0, 17);
-            // 
-            // fileResponseToolStripMenuItem
-            // 
-            fileResponseToolStripMenuItem.Name = "fileResponseToolStripMenuItem";
-            fileResponseToolStripMenuItem.Size = new Size(209, 22);
-            fileResponseToolStripMenuItem.Text = "file response";
-            fileResponseToolStripMenuItem.Click += fileResponseToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -520,5 +529,6 @@
         private ToolStripMenuItem fileDownloadToolStripMenuItem;
         private ColumnHeader columnHeader8;
         private ToolStripMenuItem fileResponseToolStripMenuItem;
+        private ToolStripMenuItem staticJsonFileToolStripMenuItem;
     }
 }
