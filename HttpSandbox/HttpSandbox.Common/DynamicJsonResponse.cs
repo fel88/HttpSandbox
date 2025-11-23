@@ -18,12 +18,30 @@ namespace HttpSandbox
 
         public string Program { get; set; }
 
+        IResponseGenerator Generator { get; set; }
+        string LastGeneratedProgramHash;
         private string GenerateJson()
         {
-            var results = Compiler.compile(Program);
+            var hash1 = Program.MD5Hash();
+            if (Generator != null && hash1 == LastGeneratedProgramHash)
+            {
+                try
+                {
+                    var res = Generator.Generate();
+                    return res;
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+
+            }
+            Generator = null;
+            var results = Compiler.Compile(Program);
 
             if (results.Errors.Any())
             {
+                
                 foreach (var item in results.Errors)
                 {
 
@@ -39,15 +57,15 @@ namespace HttpSandbox
 
                 foreach (Type t in allTypes.Take(1))
                 {
-                    var inst = Activator.CreateInstance(t);
+                    var inst = Generator = Activator.CreateInstance(t) as IResponseGenerator;
                     //dynamic v = inst;                    
-                    var mf2 = t.GetMethods().FirstOrDefault(z => z.Name.ToLower().Contains("generate"));
+                    LastGeneratedProgramHash = Program.MD5Hash();
 
-                    if (mf2 != null)
+                    if (Generator != null)
                     {
                         try
                         {
-                            var res = mf2.Invoke(inst, new object[] { }) as string;
+                            var res = Generator.Generate();
                             return res;
                         }
                         catch (Exception ex)

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace HttpSandbox.Common
@@ -9,6 +10,9 @@ namespace HttpSandbox.Common
         public Server() { }
         public Server(XElement root)
         {
+            if (root.Attribute("root") != null)
+                Port = int.Parse(root.Attribute("port").Value);
+
             foreach (var item in root.Elements("mock"))
             {
                 var kind = item.Attribute("kind").Value;
@@ -45,6 +49,7 @@ namespace HttpSandbox.Common
         public XElement ToXml()
         {
             XElement ret = new XElement("server");
+            ret.Add(new XAttribute("port", Port));
             foreach (var item in Mocks)
             {
                 ret.Add(item.ToXml());

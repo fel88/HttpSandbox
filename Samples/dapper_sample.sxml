@@ -1,0 +1,68 @@
+<server port="8888">
+  <mock kind="StaticHtmlPageResponse" priority="0" enabled="true" name="">
+    <content><![CDATA[<!doctype html>
+<!-- HTML content follows --><html><header></header><body>Hello world!<p><a href="data.json" download>
+    Download File
+</a></p><a href="data.json" >
+    Show File
+</a></body></html>]]></content>
+    <filters>
+      <httpFilter kind="ContainsTextHttpFilter">
+        <filter><![CDATA[GET]]></filter>
+      </httpFilter>
+    </filters>
+  </mock>
+  <mock kind="DynamicJsonResponse" priority="10" enabled="true" name="">
+    <data><![CDATA[using System;
+using System.Text;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using Npgsql;
+using Dapper;
+using System.Threading.Tasks;
+using HttpSandbox;
+
+class Program : IResponseGenerator
+{
+    public class Product
+    {
+        public int Id { get; set; } // Primary Key (by convention)
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    public async Task<IEnumerable<T>> QueryRawSqlAsync<T>(string _connectionString, string sql, object parameters = null)
+    {
+        using (var connection = new NpgsqlConnection(_connectionString))
+        {
+            await connection.OpenAsync();
+            var results = await connection.QueryAsync<T>(sql, parameters);
+            return results;
+        }
+    }
+
+    public string Generate()
+    {
+        var connection = "Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=12345";
+        var query = "select * from public.\"Products\"";
+        var result = QueryRawSqlAsync<Product>(connection, query);
+        result.Wait();
+        StringBuilder sb = new();
+        sb.Append('[');
+        foreach (var product in result.Result)
+        {
+            sb.Append($"{{'id':'{product.Id}','name':'{product.Name}','price':'{product.Price}'}}".Replace("'", "\""));
+        }
+        sb.Append(']');
+
+        return sb.ToString().Replace("}{", "},{");
+    }
+}]]></data>
+    <filters>
+      <httpFilter kind="ContainsTextHttpFilter">
+        <filter><![CDATA[data.json]]></filter>
+      </httpFilter>
+    </filters>
+  </mock>
+</server>

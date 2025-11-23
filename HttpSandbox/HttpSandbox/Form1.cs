@@ -282,13 +282,12 @@ namespace HttpSandbox
                     }
                 case DynamicJsonResponse djr:
                     {
-                        
+
                         var c2 = new Command()
                         {
                             Name = "edit",
                             Perform = (z) =>
                             {
-
                                 SharpCodeEditor editor = new SharpCodeEditor();
                                 editor.MdiParent = mdi.Instance;
 
@@ -298,10 +297,10 @@ namespace HttpSandbox
                                 {
                                     djr.Program = editor.Editor.Text;
                                 };
-                                editor.FormClosing += (s, e) =>
+                                /*editor.FormClosing += (s, e) =>
                                 {
                                     djr.Program = editor.Editor.Text;
-                                };
+                                };*/
 
 
                             }
@@ -563,6 +562,35 @@ namespace HttpSandbox
         private void dynamicJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             server.Mocks.Add(new DynamicJsonResponse());
+            UpdateMocksList();
+        }
+
+        private void staticJsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Clear();
+            var s1 = new StaticHtmlPageResponse();
+
+            s1.Html = "<!doctype html>\r\n<!-- HTML content follows -->" +
+                                    "<html><header></header><body>" +
+                                    "Hello world!<p><a href=\"data.json\" download>\r\n    Download File\r\n</a></p>" +
+                                    "<a href=\"data.json\" >\r\n    Show File\r\n</a>" +
+                                    "</body></html>";
+            server.Mocks.Add(s1);
+            server.Mocks[0].Filters.Add(new ContainsTextHttpFilter() { Filter = "GET" });
+
+            server.Mocks.Add(new DynamicJsonResponse() { Program = JsonTemplates.GenerateSample1, Priority = 10 });
+            server.Mocks[1].Filters.Add(new ContainsTextHttpFilter() { Filter = "data.json" });
+
+            UpdateMocksList();
+        }
+
+        private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mocksListView.SelectedItems.Count == 0)
+                return;
+
+            var m = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
+            server.Mocks.Add(m.Clone());
             UpdateMocksList();
         }
     }

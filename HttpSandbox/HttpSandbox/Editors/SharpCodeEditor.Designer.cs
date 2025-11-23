@@ -30,34 +30,52 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SharpCodeEditor));
             toolStrip1 = new ToolStrip();
+            toolStripButton4 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
+            toolStripButton5 = new ToolStripButton();
             toolStripButton3 = new ToolStripDropDownButton();
             jsonGenerationToolStripMenuItem = new ToolStripMenuItem();
             drapperFetchToolStripMenuItem = new ToolStripMenuItem();
-            toolStripButton4 = new ToolStripButton();
-            toolStripButton5 = new ToolStripButton();
             panel1 = new Panel();
+            toolStripButton1 = new ToolStripButton();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton4, toolStripButton2, toolStripButton5, toolStripButton3 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton4, toolStripButton1, toolStripButton2, toolStripButton5, toolStripButton3 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(800, 25);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButton4
+            // 
+            toolStripButton4.Image = Properties.Resources.compile;
+            toolStripButton4.ImageTransparentColor = Color.Magenta;
+            toolStripButton4.Name = "toolStripButton4";
+            toolStripButton4.Size = new Size(70, 22);
+            toolStripButton4.Text = "compile";
+            toolStripButton4.Click += toolStripButton4_Click;
+            // 
             // toolStripButton2
             // 
-            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
+            toolStripButton2.Image = Properties.Resources.edit_outdent_rtl;
             toolStripButton2.ImageTransparentColor = Color.Magenta;
             toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(47, 22);
+            toolStripButton2.Size = new Size(63, 22);
             toolStripButton2.Text = "format";
             toolStripButton2.Click += toolStripButton2_Click;
+            // 
+            // toolStripButton5
+            // 
+            toolStripButton5.Image = Properties.Resources.bug__plus;
+            toolStripButton5.ImageTransparentColor = Color.Magenta;
+            toolStripButton5.Name = "toolStripButton5";
+            toolStripButton5.Size = new Size(86, 22);
+            toolStripButton5.Text = "+debugger";
+            toolStripButton5.Click += toolStripButton5_Click;
             // 
             // toolStripButton3
             // 
@@ -72,36 +90,16 @@
             // jsonGenerationToolStripMenuItem
             // 
             jsonGenerationToolStripMenuItem.Name = "jsonGenerationToolStripMenuItem";
-            jsonGenerationToolStripMenuItem.Size = new Size(180, 22);
+            jsonGenerationToolStripMenuItem.Size = new Size(159, 22);
             jsonGenerationToolStripMenuItem.Text = "json generation ";
             jsonGenerationToolStripMenuItem.Click += jsonGenerationToolStripMenuItem_Click;
             // 
             // drapperFetchToolStripMenuItem
             // 
             drapperFetchToolStripMenuItem.Name = "drapperFetchToolStripMenuItem";
-            drapperFetchToolStripMenuItem.Size = new Size(180, 22);
+            drapperFetchToolStripMenuItem.Size = new Size(159, 22);
             drapperFetchToolStripMenuItem.Text = "drapper fetch";
             drapperFetchToolStripMenuItem.Click += drapperFetchToolStripMenuItem_Click;
-            // 
-            // toolStripButton4
-            // 
-            toolStripButton4.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripButton4.Image = (Image)resources.GetObject("toolStripButton4.Image");
-            toolStripButton4.ImageTransparentColor = Color.Magenta;
-            toolStripButton4.Name = "toolStripButton4";
-            toolStripButton4.Size = new Size(54, 22);
-            toolStripButton4.Text = "compile";
-            toolStripButton4.Click += toolStripButton4_Click;
-            // 
-            // toolStripButton5
-            // 
-            toolStripButton5.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripButton5.Image = (Image)resources.GetObject("toolStripButton5.Image");
-            toolStripButton5.ImageTransparentColor = Color.Magenta;
-            toolStripButton5.Name = "toolStripButton5";
-            toolStripButton5.Size = new Size(70, 22);
-            toolStripButton5.Text = "+debugger";
-            toolStripButton5.Click += toolStripButton5_Click;
             // 
             // panel1
             // 
@@ -110,6 +108,15 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(800, 425);
             panel1.TabIndex = 1;
+            // 
+            // toolStripButton1
+            // 
+            toolStripButton1.Image = Properties.Resources.compile_error;
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(102, 22);
+            toolStripButton1.Text = "compile + run";
+            toolStripButton1.Click += toolStripButton1_Click_1;
             // 
             // SharpCodeEditor
             // 
@@ -136,5 +143,6 @@
         private ToolStripButton toolStripButton4;
         private ToolStripButton toolStripButton5;
         private ToolStripMenuItem drapperFetchToolStripMenuItem;
+        private ToolStripButton toolStripButton1;
     }
 }

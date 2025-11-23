@@ -7,7 +7,7 @@ namespace HttpSandbox
 {
     public class Compiler
     {
-        public static RoslynCompilerResults compile(string program)
+        public static RoslynCompilerResults Compile(string program)
         {
             List<MetadataReference> References = new List<MetadataReference>();
 
@@ -26,6 +26,7 @@ namespace HttpSandbox
                 Assembly.GetAssembly(typeof(NpgsqlConnection)).FullName,
                 Assembly.GetAssembly(typeof(Compiler)).FullName,
                 Assembly.GetAssembly(typeof(Task)).FullName,
+                Assembly.GetAssembly(typeof(IResponseGenerator)).FullName,
                 Assembly.GetAssembly(typeof(Dapper.SqlMapper)).FullName,
             ];
 
@@ -89,4 +90,5 @@ namespace HttpSandbox
             return null;
         }
     }
+
 }

@@ -56,5 +56,12 @@ namespace HttpSandbox
             return new XElement("filters", Filters.Select(z => z.ToXml()));
         }
 
+        public virtual MockHttpResponse Clone()
+        {
+            var xml = ToXml();
+            var ret = (Activator.CreateInstance(GetType(), new object[] { xml }) as MockHttpResponse);
+            ret.Name += "_cloned";
+            return ret;
+        }
     }
 }

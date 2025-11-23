@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,12 +76,9 @@ namespace HttpSandbox.Editors
 
         private void jsonGenerationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Editor.Text = @"class Program{
-public string Generate(){
-return ""[{'id':'1','name':'alex'}]"";
-}
-}";
+            Editor.Text = JsonTemplates.GenerateSample1;
         }
+
         TableLayoutPanel errorPanel = new TableLayoutPanel();
         ListView lv;
 
@@ -87,7 +86,7 @@ return ""[{'id':'1','name':'alex'}]"";
         {
             try
             {
-                var results = Compiler.compile(Editor.Text);
+                var results = Compiler.Compile(Editor.Text);
                 errorPanel.Visible = false;
 
                 lv.Items.Clear();
@@ -96,10 +95,12 @@ return ""[{'id':'1','name':'alex'}]"";
                     errorPanel.Visible = true;
                     lv.Items.Add(new ListViewItem([$"{item.Line}", $"{item.Line}: {item.Text}"]) { Tag = item, BackColor = Color.Pink, ForeColor = Color.White });
                 }
+                if (results.Assembly != null)
+                    MessageBox.Show("No errors", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -119,10 +120,10 @@ using System.Collections.Generic;
 using Npgsql;
 using Dapper;
 using System.Threading.Tasks;
+using HttpSandbox;
 
-class Program
+class Program : IResponseGenerator
 {
-    
     public class Product
     {
         public int Id { get; set; } // Primary Key (by convention)
@@ -140,19 +141,82 @@ class Program
         }
     }
 
-    public  string Generate()
+    public string Generate()
     {
         var connection = ""Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=12345"";
-        var query=""select * from public.\""Products\"""";
-        var result =  QueryRawSqlAsync<Product>(connection, query);
-result.Wait();
-        foreach(var product in result.Result){
-//make json here
-           }
-return $""[{{'id':'1','count':'{result.Result.Count()}'}}]"".Replace(""'"", ""\"""");
-    }
+        var query = ""select * from public.\""Products\"""";
+        var result = QueryRawSqlAsync<Product>(connection, query);
+        result.Wait();
+        foreach (var product in result.Result)
+        {
+        //make json here
+        }
 
+        return $""[{{'id':'1','count':'{result.Result.Count()}'}}]"".Replace(""'"", ""\"""");
+    }
 }";
+        }
+        public static async Task RunTaskWithTimeoutAsync(Action action)
+        {
+            var longRunningTask = Task.Run(async () =>
+            {
+                action();
+            });
+
+            try
+            {
+                // Wait for the task to complete, with a 2 second timeout
+                await longRunningTask.WaitAsync(TimeSpan.FromSeconds(5));
+            }
+            catch (TimeoutException)
+            {
+                MessageBox.Show("The task timed out.");
+                // The original task is still running in the background, 
+                // but the flow of control has handled the timeout.
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+        int RunTimeoutSec = 10;//todo make configurable with AutoDialog
+        private async void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                var results = Compiler.Compile(Editor.Text);
+                errorPanel.Visible = false;
+
+                lv.Items.Clear();
+                foreach (var item in results.Errors)
+                {
+                    errorPanel.Visible = true;
+                    lv.Items.Add(new ListViewItem([$"{item.Line}", $"{item.Line}: {item.Text}"]) { Tag = item, BackColor = Color.Pink, ForeColor = Color.White });
+                }
+
+                Assembly asm = results.Assembly;
+
+                Type[] allTypes = asm.GetTypes();
+
+                foreach (Type t in allTypes.Take(1))
+                {
+                    var inst = Activator.CreateInstance(t) as IResponseGenerator;
+                    //dynamic v = inst;
+                    string res = string.Empty;
+                    await Task.Run(() =>
+                    {
+                        res = inst.Generate();
+
+                    }).WaitAsync(TimeSpan.FromSeconds(RunTimeoutSec)); 
+
+
+                    MessageBox.Show(res, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
