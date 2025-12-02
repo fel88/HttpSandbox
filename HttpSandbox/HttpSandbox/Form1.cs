@@ -536,7 +536,7 @@ namespace HttpSandbox
 
         private void fileResponseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            server.Mocks.Add(new FileResponse());
+            server.Mocks.Add(new FileResponse() { Priority = 1 });
             UpdateMocksList();
         }
 
