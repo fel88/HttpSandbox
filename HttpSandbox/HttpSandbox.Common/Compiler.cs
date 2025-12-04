@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Npgsql;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace HttpSandbox
 {
@@ -28,6 +29,7 @@ namespace HttpSandbox
                 Assembly.GetAssembly(typeof(Task)).FullName,
                 Assembly.GetAssembly(typeof(IResponseGenerator)).FullName,
                 Assembly.GetAssembly(typeof(Dapper.SqlMapper)).FullName,
+                Assembly.GetAssembly(typeof(XDocument)).FullName,
             ];
 
             foreach (var item in assembliesToBind)
