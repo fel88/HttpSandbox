@@ -4,5 +4,4 @@ namespace HttpSandbox
     {
         string Generate();
     }
-
 }

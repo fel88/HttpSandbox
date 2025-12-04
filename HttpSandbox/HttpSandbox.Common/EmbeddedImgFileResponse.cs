@@ -17,7 +17,7 @@ namespace HttpSandbox
 
         public byte[] Data { get; set; }
 
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             var resp = "HTTP/1.1 200 OK\r\n" +
                 "Content-Type: image/png" +
@@ -28,9 +28,9 @@ namespace HttpSandbox
             return resp;
         }
 
-        public override void WriteResponse(StreamWriter writer)
+        public override void WriteResponse(HttpRequestInfo request, StreamWriter writer)
         {
-            writer.WriteLine(GetResponse());
+            writer.WriteLine(GetResponse(request));
             writer.Flush();
 
             writer.BaseStream.Write(Data, 0, Data.Length);

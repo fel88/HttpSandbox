@@ -18,7 +18,7 @@ namespace HttpSandbox
 
         public string Path { get; set; }
 
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             var text = File.ReadAllBytes(Path);
             var resp = "HTTP/1.1 200 OK\r\n" +
@@ -30,9 +30,9 @@ namespace HttpSandbox
             return resp;
         }
 
-        public override void WriteResponse(StreamWriter writer)
+        public override void WriteResponse(HttpRequestInfo request, StreamWriter writer)
         {
-            writer.WriteLine(GetResponse());
+            writer.WriteLine(GetResponse(request));
             var text = File.ReadAllBytes(Path);
 
             writer.BaseStream.Write(text, 0, text.Length);

@@ -73,6 +73,7 @@
             dynamicJsonToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
+            cloneToolStripMenuItem = new ToolStripMenuItem();
             filtersToolStripMenuItem = new ToolStripMenuItem();
             moveToolStripMenuItem = new ToolStripMenuItem();
             upToolStripMenuItem = new ToolStripMenuItem();
@@ -80,7 +81,7 @@
             commandsToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
-            cloneToolStripMenuItem = new ToolStripMenuItem();
+            dynamicFileToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             contextMenuStrip2.SuspendLayout();
@@ -156,28 +157,28 @@
             // helloWorldToolStripMenuItem
             // 
             helloWorldToolStripMenuItem.Name = "helloWorldToolStripMenuItem";
-            helloWorldToolStripMenuItem.Size = new Size(180, 22);
+            helloWorldToolStripMenuItem.Size = new Size(153, 22);
             helloWorldToolStripMenuItem.Text = "hello world";
             helloWorldToolStripMenuItem.Click += helloWorldToolStripMenuItem_Click;
             // 
             // helloWorld2ToolStripMenuItem
             // 
             helloWorld2ToolStripMenuItem.Name = "helloWorld2ToolStripMenuItem";
-            helloWorld2ToolStripMenuItem.Size = new Size(180, 22);
+            helloWorld2ToolStripMenuItem.Size = new Size(153, 22);
             helloWorld2ToolStripMenuItem.Text = "file single page";
             helloWorld2ToolStripMenuItem.Click += helloWorld2ToolStripMenuItem_Click;
             // 
             // fileDownloadToolStripMenuItem
             // 
             fileDownloadToolStripMenuItem.Name = "fileDownloadToolStripMenuItem";
-            fileDownloadToolStripMenuItem.Size = new Size(180, 22);
+            fileDownloadToolStripMenuItem.Size = new Size(153, 22);
             fileDownloadToolStripMenuItem.Text = "file download";
             fileDownloadToolStripMenuItem.Click += fileDownloadToolStripMenuItem_Click;
             // 
             // staticJsonToolStripMenuItem
             // 
             staticJsonToolStripMenuItem.Name = "staticJsonToolStripMenuItem";
-            staticJsonToolStripMenuItem.Size = new Size(180, 22);
+            staticJsonToolStripMenuItem.Size = new Size(153, 22);
             staticJsonToolStripMenuItem.Text = "static json";
             staticJsonToolStripMenuItem.Click += staticJsonToolStripMenuItem_Click;
             // 
@@ -359,7 +360,7 @@
             // 
             // addToolStripMenuItem
             // 
-            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem, htmlFilePageResponseToolStripMenuItem, fileResponseToolStripMenuItem, staticJsonFileToolStripMenuItem, dynamicJsonToolStripMenuItem });
+            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { staticHtmlPageResponseToolStripMenuItem, status200ToolStripMenuItem, htmlFilePageResponseToolStripMenuItem, fileResponseToolStripMenuItem, staticJsonFileToolStripMenuItem, dynamicJsonToolStripMenuItem, dynamicFileToolStripMenuItem });
             addToolStripMenuItem.Image = Properties.Resources.plus;
             addToolStripMenuItem.Name = "addToolStripMenuItem";
             addToolStripMenuItem.Size = new Size(180, 22);
@@ -424,6 +425,14 @@
             editToolStripMenuItem.Text = "edit";
             editToolStripMenuItem.Click += editToolStripMenuItem_Click;
             // 
+            // cloneToolStripMenuItem
+            // 
+            cloneToolStripMenuItem.Image = Properties.Resources.document_copy;
+            cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
+            cloneToolStripMenuItem.Size = new Size(180, 22);
+            cloneToolStripMenuItem.Text = "clone";
+            cloneToolStripMenuItem.Click += cloneToolStripMenuItem_Click;
+            // 
             // filtersToolStripMenuItem
             // 
             filtersToolStripMenuItem.Image = Properties.Resources.funnel__plus;
@@ -474,13 +483,12 @@
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(0, 17);
             // 
-            // cloneToolStripMenuItem
+            // dynamicFileToolStripMenuItem
             // 
-            cloneToolStripMenuItem.Image = Properties.Resources.document_copy;
-            cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-            cloneToolStripMenuItem.Size = new Size(180, 22);
-            cloneToolStripMenuItem.Text = "clone";
-            cloneToolStripMenuItem.Click += cloneToolStripMenuItem_Click;
+            dynamicFileToolStripMenuItem.Name = "dynamicFileToolStripMenuItem";
+            dynamicFileToolStripMenuItem.Size = new Size(209, 22);
+            dynamicFileToolStripMenuItem.Text = "dynamic file";
+            dynamicFileToolStripMenuItem.Click += dynamicFileToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -561,5 +569,6 @@
         private ToolStripMenuItem dynamicJsonToolStripMenuItem;
         private ToolStripMenuItem staticJsonToolStripMenuItem;
         private ToolStripMenuItem cloneToolStripMenuItem;
+        private ToolStripMenuItem dynamicFileToolStripMenuItem;
     }
 }

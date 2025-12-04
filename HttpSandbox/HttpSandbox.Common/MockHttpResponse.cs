@@ -29,10 +29,10 @@ namespace HttpSandbox
                 }
             }
         }
-        public abstract string GetResponse();
-        public virtual void WriteResponse(StreamWriter writer)
+        public abstract string GetResponse(HttpRequestInfo request);
+        public virtual void WriteResponse(HttpRequestInfo request, StreamWriter writer)
         {
-            writer.WriteLine(GetResponse());
+            writer.WriteLine(GetResponse(request));
             writer.Flush();
         }
 

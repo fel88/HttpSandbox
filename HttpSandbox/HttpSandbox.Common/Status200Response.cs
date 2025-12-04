@@ -7,7 +7,7 @@ namespace HttpSandbox
         public Status200Response() { }
         public Status200Response(XElement elem) : base(elem) { }
 
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             return "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 20\r\n\r\n{\"success\":\"true\"}";
             //HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n           

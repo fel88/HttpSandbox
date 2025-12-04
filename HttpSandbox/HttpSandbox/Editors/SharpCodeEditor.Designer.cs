@@ -31,13 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SharpCodeEditor));
             toolStrip1 = new ToolStrip();
             toolStripButton4 = new ToolStripButton();
+            toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
             toolStripButton5 = new ToolStripButton();
             toolStripButton3 = new ToolStripDropDownButton();
             jsonGenerationToolStripMenuItem = new ToolStripMenuItem();
             drapperFetchToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
-            toolStripButton1 = new ToolStripButton();
+            dynamicFileToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -58,6 +59,15 @@
             toolStripButton4.Size = new Size(70, 22);
             toolStripButton4.Text = "compile";
             toolStripButton4.Click += toolStripButton4_Click;
+            // 
+            // toolStripButton1
+            // 
+            toolStripButton1.Image = Properties.Resources.compile_error;
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(102, 22);
+            toolStripButton1.Text = "compile + run";
+            toolStripButton1.Click += toolStripButton1_Click_1;
             // 
             // toolStripButton2
             // 
@@ -80,7 +90,7 @@
             // toolStripButton3
             // 
             toolStripButton3.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripButton3.DropDownItems.AddRange(new ToolStripItem[] { jsonGenerationToolStripMenuItem, drapperFetchToolStripMenuItem });
+            toolStripButton3.DropDownItems.AddRange(new ToolStripItem[] { jsonGenerationToolStripMenuItem, drapperFetchToolStripMenuItem, dynamicFileToolStripMenuItem });
             toolStripButton3.Image = (Image)resources.GetObject("toolStripButton3.Image");
             toolStripButton3.ImageTransparentColor = Color.Magenta;
             toolStripButton3.Name = "toolStripButton3";
@@ -90,14 +100,14 @@
             // jsonGenerationToolStripMenuItem
             // 
             jsonGenerationToolStripMenuItem.Name = "jsonGenerationToolStripMenuItem";
-            jsonGenerationToolStripMenuItem.Size = new Size(159, 22);
+            jsonGenerationToolStripMenuItem.Size = new Size(180, 22);
             jsonGenerationToolStripMenuItem.Text = "json generation ";
             jsonGenerationToolStripMenuItem.Click += jsonGenerationToolStripMenuItem_Click;
             // 
             // drapperFetchToolStripMenuItem
             // 
             drapperFetchToolStripMenuItem.Name = "drapperFetchToolStripMenuItem";
-            drapperFetchToolStripMenuItem.Size = new Size(159, 22);
+            drapperFetchToolStripMenuItem.Size = new Size(180, 22);
             drapperFetchToolStripMenuItem.Text = "drapper fetch";
             drapperFetchToolStripMenuItem.Click += drapperFetchToolStripMenuItem_Click;
             // 
@@ -109,14 +119,12 @@
             panel1.Size = new Size(800, 425);
             panel1.TabIndex = 1;
             // 
-            // toolStripButton1
+            // dynamicFileToolStripMenuItem
             // 
-            toolStripButton1.Image = Properties.Resources.compile_error;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(102, 22);
-            toolStripButton1.Text = "compile + run";
-            toolStripButton1.Click += toolStripButton1_Click_1;
+            dynamicFileToolStripMenuItem.Name = "dynamicFileToolStripMenuItem";
+            dynamicFileToolStripMenuItem.Size = new Size(180, 22);
+            dynamicFileToolStripMenuItem.Text = "dynamic file";
+            dynamicFileToolStripMenuItem.Click += dynamicFileToolStripMenuItem_Click;
             // 
             // SharpCodeEditor
             // 
@@ -144,5 +152,6 @@
         private ToolStripButton toolStripButton5;
         private ToolStripMenuItem drapperFetchToolStripMenuItem;
         private ToolStripButton toolStripButton1;
+        private ToolStripMenuItem dynamicFileToolStripMenuItem;
     }
 }

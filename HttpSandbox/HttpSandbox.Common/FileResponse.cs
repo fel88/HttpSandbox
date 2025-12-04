@@ -17,7 +17,7 @@ namespace HttpSandbox
 
         public string Path { get; set; }
         public string ContentType { get; set; } = "application/octet-stream";
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             var finfo = new FileInfo(Path);            
             
@@ -30,9 +30,9 @@ namespace HttpSandbox
             return resp;
         }
 
-        public override async void WriteResponse(StreamWriter writer)
+        public override async void WriteResponse(HttpRequestInfo request, StreamWriter writer)
         {
-            writer.WriteLine(GetResponse());
+            writer.WriteLine(GetResponse(request));
             writer.Flush();
             using FileStream fs = new FileStream(Path, FileMode.Open);
             await fs.CopyToAsync(writer.BaseStream);            

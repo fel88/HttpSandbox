@@ -207,7 +207,7 @@ class Program : IResponseGenerator
                     {
                         res = inst.Generate();
 
-                    }).WaitAsync(TimeSpan.FromSeconds(RunTimeoutSec)); 
+                    }).WaitAsync(TimeSpan.FromSeconds(RunTimeoutSec));
 
 
                     MessageBox.Show(res, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -217,6 +217,12 @@ class Program : IResponseGenerator
             {
                 MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dynamicFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Editor.Text = JsonTemplates.GenerateSample2;
+
         }
     }
 }

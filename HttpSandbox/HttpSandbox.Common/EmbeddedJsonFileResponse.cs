@@ -17,7 +17,7 @@ namespace HttpSandbox
 
         public string Json { get; set; }
 
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             var resp = "HTTP/1.1 200 OK\r\n" +
                 "Content-Type: application/json" +

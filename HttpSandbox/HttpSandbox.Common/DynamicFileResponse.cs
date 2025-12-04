@@ -1,52 +1,44 @@
 using System.Reflection;
 using System.Xml.Linq;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 
 namespace HttpSandbox
 {
-    public class DynamicJsonResponse : MockHttpResponse
+    public class DynamicFileResponse : MockHttpResponse
     {
-        public DynamicJsonResponse()
+        public DynamicFileResponse()
         {
 
         }
 
-        public DynamicJsonResponse(XElement item) : base(item)
+        public DynamicFileResponse(XElement item) : base(item)
         {
+            ContentType = item.Element("contentType").Value;
             Program = item.Element("data").Value;
-        }
 
+        }
         public string Program { get; set; }
 
-        IResponseGenerator Generator { get; set; }
+        IDynamicResponseGenerator Generator { get; set; }
         string LastGeneratedProgramHash;
-        private string GenerateJson()
+
+        private void Compile()
         {
             var hash1 = Program.MD5Hash();
-            if (Generator != null && hash1 == LastGeneratedProgramHash)
-            {
-                try
-                {
-                    var res = Generator.Generate();
-                    return res;
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
-                }
-
-            }
+            if (Generator != null && hash1 == LastGeneratedProgramHash)            
+                return;
+            
             Generator = null;
             var results = Compiler.Compile(Program);
 
             if (results.Errors.Any())
             {
-                
+
                 foreach (var item in results.Errors)
                 {
 
                 }
-                return string.Join(",", results.Errors.Select(z => $"{z.Line}: {z.Text}"));
+                //  return string.Join(",", results.Errors.Select(z => $"{z.Line}: {z.Text}"));
+                return;
             }
 
             try
@@ -57,7 +49,7 @@ namespace HttpSandbox
 
                 foreach (Type t in allTypes.Take(1))
                 {
-                    var inst = Generator = Activator.CreateInstance(t) as IResponseGenerator;
+                    var inst = Generator = Activator.CreateInstance(t) as IDynamicResponseGenerator;
                     //dynamic v = inst;                    
                     LastGeneratedProgramHash = Program.MD5Hash();
 
@@ -65,17 +57,17 @@ namespace HttpSandbox
                     {
                         try
                         {
-                            var res = Generator.Generate();
-                            return res;
+                            //var res = Generator.Generate();
+                           // return res;
                         }
                         catch (Exception ex)
                         {
-                            return ex.Message;
+                            
                         }
                     }
                     else
                     {
-                        return "";
+                        return ;
                     }
 
                 }
@@ -83,28 +75,40 @@ namespace HttpSandbox
             catch (Exception ex)
             {
                 //MessageBox.Show(ex.Message);
-                return "";
+                return ;
             }
-            return "";
+            return ;
         }
+
+        public string ContentType { get; set; } = "application/octet-stream";
         public override string GetResponse(HttpRequestInfo request)
         {
-            var json = GenerateJson();
+            Compile();
             var resp = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: application/json" +
-                $"\r\nDate: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}" +
-                $"\r\nLast-Modified: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}" +
-                $"\r\nContent-Length: {json.Length}\r\n\r\n{json}";
+                $"Content-Type: {Generator.GetMime(request)}" +
+                "\r\nDate: Fri, 21 Jun 2025 14:18:33 GMT" +
+                $"\r\nLast-Modified: Thu, 17 Oct {DateTime.Now.Year} 07:18:26 GMT" +
+                $"\r\nContent-Length: {Generator.GetLength(request)}\r\n";
 
             return resp;
+        }
+
+        public override async void WriteResponse(HttpRequestInfo request, StreamWriter writer)
+        {
+            writer.WriteLine(GetResponse(request));
+            writer.Flush();
+            await Generator.WriteToStream(request, writer.BaseStream);            
         }
 
         public override XElement ToXml()
         {
             XElement ret = new XElement("mock");
-            ret.Add(new XAttribute("kind", nameof(DynamicJsonResponse)));
+            ret.Add(new XAttribute("kind", nameof(DynamicFileResponse)));
             ret.Add(new XElement("data", new XCData(Program)));
+
+            ret.Add(new XElement("contentType", new XCData(ContentType)));
             UpdateXmlNode(ret);
+
             return ret;
         }
     }

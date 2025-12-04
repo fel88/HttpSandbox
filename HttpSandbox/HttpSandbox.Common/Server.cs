@@ -36,6 +36,9 @@ namespace HttpSandbox.Common
                     case nameof(DynamicJsonResponse):
                         Mocks.Add(new DynamicJsonResponse(item));
                         break;
+                    case nameof(DynamicFileResponse):
+                        Mocks.Add(new DynamicFileResponse(item));
+                        break;
                 }
             }
         }
@@ -119,8 +122,8 @@ namespace HttpSandbox.Common
                             if (cands.Any())
                             {
                                 var fr = cands.OrderByDescending(z => z.Priority).First();
-                                 fr.WriteResponse(writer);
-                                
+                                fr.WriteResponse(request, writer);
+
                             }
                         }
                     }

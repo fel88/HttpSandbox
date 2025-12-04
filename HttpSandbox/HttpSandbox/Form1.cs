@@ -307,6 +307,33 @@ namespace HttpSandbox
                         };
                         return [c2];
                     }
+                case DynamicFileResponse dfr:
+                    {
+
+                        var c2 = new Command()
+                        {
+                            Name = "edit",
+                            Perform = (z) =>
+                            {
+                                SharpCodeEditor editor = new SharpCodeEditor();
+                                editor.MdiParent = mdi.Instance;
+
+                                editor.Init(dfr.Program);
+                                editor.Show();
+                                editor.Save += () =>
+                                {
+                                    dfr.Program = editor.Editor.Text;
+                                };
+                                /*editor.FormClosing += (s, e) =>
+                                {
+                                    djr.Program = editor.Editor.Text;
+                                };*/
+
+
+                            }
+                        };
+                        return [c2];
+                    }
                 case FileHtmlPageResponse:
                     {
                         Command c = new Command()
@@ -591,6 +618,12 @@ namespace HttpSandbox
 
             var m = mocksListView.SelectedItems[0].Tag as MockHttpResponse;
             server.Mocks.Add(m.Clone());
+            UpdateMocksList();
+        }
+
+        private void dynamicFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            server.Mocks.Add(new DynamicFileResponse());
             UpdateMocksList();
         }
     }

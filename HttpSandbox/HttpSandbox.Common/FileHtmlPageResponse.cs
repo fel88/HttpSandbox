@@ -18,7 +18,7 @@ namespace HttpSandbox
 
         public string Path { get; set; }
 
-        public override string GetResponse()
+        public override string GetResponse(HttpRequestInfo request)
         {
             var text = File.ReadAllText(Path);
             var resp = "HTTP/1.1 200 OK\r\n" +
