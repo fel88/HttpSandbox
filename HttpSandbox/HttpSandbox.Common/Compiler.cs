@@ -34,26 +34,33 @@ namespace HttpSandbox
 
             foreach (var item in assembliesToBind)
             {
-                if (File.Exists(item))
+                try
                 {
-                    References.Add(MetadataReference.CreateFromFile(item));
-                }
-                else
-                {
-                    Assembly assm = null;
-                    try
+                    if (File.Exists(item))
                     {
-                        assm = Assembly.Load(item);
+                        References.Add(MetadataReference.CreateFromFile(item));
                     }
-                    catch (Exception ex)
+                    else
                     {
+                        Assembly assm = null;
+                        try
+                        {
+                            assm = Assembly.Load(item);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        if (assm == null)
+                        {
+                            assm = TryGetAssemblyFromGAC(item);
+                        }
+                        References.Add(MetadataReference.CreateFromFile(assm.Location));
 
                     }
-                    if (assm == null)
-                    {
-                        assm = TryGetAssemblyFromGAC(item);
-                    }
-                    References.Add(MetadataReference.CreateFromFile(assm.Location));
+                }
+                catch (Exception ex)
+                {
 
                 }
             }
